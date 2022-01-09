@@ -17,11 +17,7 @@ config = {
 firebase = pyrebase.initialize_app(config)
 database = firebase.database()
 # Create your views here.
-def reg_volunteer():
-	#email, password, name, std, subj, day, time
 
-def login_volunteer():
-	#email, password
 
 def add_volunteer(request) :
 	email = "adityarc@gmail.com"
@@ -63,3 +59,11 @@ def temp_func(request) :
 	database.child("Day").child("Wednesday").child("5-7").child("Maths").push({"volunteer":"rutujapc"})
 	database.child("Day").child("Wednesday").child("5-7").child("English").push({"volunteer":"rutujapc"})													
 	return HttpResponse("Done")
+
+def frontend_to_backend(request) :
+	if request.method == "POST" :
+		firstname = request.POST.get("fname")
+		lastname = request.POST.get("lname")
+		print(firstname,lastname)
+		return HttpResponse("From input read")
+	return render(request,"temp.html")

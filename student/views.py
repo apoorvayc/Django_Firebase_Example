@@ -18,11 +18,7 @@ config = {
 firebase = pyrebase.initialize_app(config)
 database = firebase.database()
 
-def reg_student():
-	#email, password, name, std, subj, day, time
 
-def login_stud():
-	#email, password
 
 
 
