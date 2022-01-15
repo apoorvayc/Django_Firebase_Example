@@ -14,7 +14,7 @@
 		<h> Subject {{ match.1 }}</h><br>
 		<h> Day {{ match.2 }}</h><br>
 		<h> From {{ match.3 }} To {{ match.4}} </h><br>
-		<input type="button" value="Connect Volunteer">
+		<a href = "http://127.0.0.1:8000/stud_chat/{{match.0}}" ><input type="button" value="Connect Volunteer"></a>
 	
 	</div>
 {% endfor %}

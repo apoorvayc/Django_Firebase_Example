@@ -50,7 +50,7 @@
 		idd = (parseInt(idd)+1).toString();
 		ref_chat_id.set({'id': idd});
 		var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
-		ref.child(idd).set({'{{ student_email }}':document.getElementById("user_msg").value});
+		ref.child(idd).set({'{{ student_email }}':document.getElementById("user_msgaccc").value});
 	  } else {
 		ref_chat_id.set({'id':'1'});
 		var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/1/');

@@ -115,9 +115,9 @@ def match_stud_to_vol(request) :
     
     return render(request,"stud_dash.html",{"email":stud_email,"match_list":match_list})
 
-def stud_chat(request):
+def stud_chat(request,name):
     student_email = 'rupalimc'
-    volunteer_email = 'anjalirc'
+    volunteer_email = name
     return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email})
     
 def messages(request) :
