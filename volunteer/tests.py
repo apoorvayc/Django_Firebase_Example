@@ -21,7 +21,7 @@ database = firebase.database()
 vol_reg_data = {
     'adityarc':{'name':'Aditya', 'grade':'5-7'},
     'apoorvayc':{'name':'Apoorva', 'grade':'5-7'},
-    'anjalirc':{'name':'Anjali', 'grade':'8-10'},
+    'anjalirc':{'name':'Anjali', 'grade':'11-12'},
     'bhagyeshjc':{'name':'Bhagyesh', 'grade':'8-10'},
     'rutujapc':{'name':'Rutuja', 'grade':'11-12'},
     'ompc':{'name':'Om', 'grade':'11-12'},
@@ -66,7 +66,12 @@ vol_avail_data = {
         'Tuesday':{
             'from':'5',
             'to':'8'	
-            }
+            },
+        'Sunday': {
+                    'from':'12',
+                    'to':'15'	
+                    }
+            
         }
     ,
     'bhagyeshjc':

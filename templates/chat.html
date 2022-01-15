@@ -1,0 +1,77 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+<body>
+<div class = "container">
+	<div id = "chat-window" style = "border: 1px solid black;">
+		<div class="row" style = "height:10%;background-color:yellow;margin-left:0;margin-right:0;">
+		{{ receiver_email }}
+		
+		</div>
+		<div class="row" style = "height:80%;margin-left:0;margin-right:0;">
+		 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+
+<script>
+ var firebaseConfig = {
+  apiKey: "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
+  authDomain: "ctrldebthack.firebaseapp.com",
+  databaseURL: "https://ctrldebthack-default-rtdb.firebaseio.com",
+  projectId: "ctrldebthack",
+  storageBucket: "ctrldebthack.appspot.com",
+  messagingSenderId: "231552560212",
+  appId: "1:231552560212:web:aacb5f70bc1ecb342951c1"
+};
+     firebase.initializeApp(firebaseConfig);
+	 
+	var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
+	msg_added.on('child_added', function (data) {
+        var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+		ref_chat_id.once('value', function(snapshot1) {
+		var idd = snapshot1.val().id;
+		var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd+'/');
+		ref_msg.once('value',function(snapshot2){
+		var chatbox = document.getElementById("chatbox");
+		var row = chatbox.insertRow(-1);
+		row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
+		});
+		
+     })
+	 });
+	 
+	 
+	
+	 
+	 function Send_Message(){
+	 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+	 ref_chat_id.once('value', function(snapshot) {
+	  if (snapshot.exists()) {
+		var idd = snapshot.val().id;
+		idd = (parseInt(idd)+1).toString();
+		ref_chat_id.set({'id': idd});
+		var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
+		ref.child(idd).set({'{{ student_email }}':document.getElementById("user_msg").value});
+	  } else {
+		ref_chat_id.set({'id':'1'});
+		var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/1/');
+		ref.set({'{{ student_email }}': document.getElementById("user_msg").value});
+	  }
+	  }
+	  );
+	 
+	 
+	 }
+	 
+</script>
+<table id="chatbox">
+</table>
+		</div>
+		<div class="row" style = "height:10%;background-color:yellow;margin-left:0;margin-right:0;">
+		<input type="text" id="user_msg">
+		<input type="button" value="Send msg" onclick="Send_Message()">
+		</div>
+		
+	</div>
+</div>
+</body>
+</html>

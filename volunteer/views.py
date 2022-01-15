@@ -67,3 +67,9 @@ def frontend_to_backend(request) :
 		print(firstname,lastname)
 		return HttpResponse("From input read")
 	return render(request,"temp.html")
+    
+
+def vol_chat(request):
+    student_email = 'rupalimc'
+    volunteer_email = 'anjalirc'
+    return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email})

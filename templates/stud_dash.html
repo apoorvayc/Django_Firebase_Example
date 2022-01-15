@@ -1,0 +1,22 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+<body>
+<div class = "container">
+<div class="row">
+<h>Welcome {{ email }}! Connect with the volunteers to start a chat. Keep Learning! <h>
+</div>
+<div class = "row">
+{% for match in match_list %}
+	<div class = "col-md-4">
+		<h> Volunteer {{ match.0 }}</h><br>
+		<h> Subject {{ match.1 }}</h><br>
+		<h> Day {{ match.2 }}</h><br>
+		<h> From {{ match.3 }} To {{ match.4}} </h><br>
+		<input type="button" value="Connect Volunteer">
+	
+	</div>
+{% endfor %}
+</body>
+</html>

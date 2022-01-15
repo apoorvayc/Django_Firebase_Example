@@ -67,29 +67,20 @@ def check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day) :
         start = t[0] if t[0] > stud_fro else stud_fro
         end = t[1] if t[1] < stud_to else stud_to
         
-        match_str = "Student " + stud_email + " is matched with Volunteer " + t[2] + " for " + subject + " on " + day + " from time" + str(start) + " to " + str(end)
+        match_str = t[2] + "@" + subject + "@" + day + "@" + str(start) + "@" + str(end)
         print(match_str)
-        match_list.append(match_str)
+        match_list.append(match_str.split("@"))
     return match_list
     
 def match_stud_to_vol(request) :
     #get student details in function
     match_list = []
-    stud_std = "7"
+    stud_std = "11"
     #write func for stud category 
-    stud_category = "5-7"
-    stud_email = "riteshgc"
-    stud_subj_list = ["English","Maths"]
-    stud_avail = {
-                        "Monday": {
-                                    "from":"10",
-                                    "to":"12"   
-                                    },
-                        "Tuesday":{
-                            "from":"10",
-                            "to":"12"   
-                            }
-                }
+    stud_category = "11-12"
+    stud_email = "rupalimc"
+    stud_subj_list = ["Hindi","History","Geography"]
+    stud_avail = {"Sunday":{"from":"13","to":"16"},"Saturday":{"from":"13","to":"16"}}
     for i in stud_avail :
         day = i
         stud_fro = int(stud_avail[i]["from"])
@@ -100,6 +91,7 @@ def match_stud_to_vol(request) :
             subject = j
             print(subject)
             volunteers = get_subject_wise_volunteers(day,stud_category,subject)
+            print(volunteers)
             try :
                 tree = IntervalTree()
                 for v in volunteers :
@@ -110,9 +102,25 @@ def match_stud_to_vol(request) :
                     tree.addi(fro,to,vol_email)
                 overlap = tree.overlap(stud_fro,stud_to) 
                 print("Overlaps if any for volunters",overlap)
-                match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
+                for t in overlap :
+                    start = t[0] if t[0] > stud_fro else stud_fro
+                    end = t[1] if t[1] < stud_to else stud_to
+                    
+                    match_str = t[2] + "@" + subject + "@" + day + "@" + str(start) + "@" + str(end)
+                    
+                    match_list.append(match_str.split("@"))
+                    #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
             except :
                 continue
+    
+    return render(request,"stud_dash.html",{"email":stud_email,"match_list":match_list})
 
-    return HttpResponse(match_list)
-
+def stud_chat(request):
+    student_email = 'rupalimc'
+    volunteer_email = 'anjalirc'
+    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email})
+    
+def messages(request) :
+    current_email = 'rupalimc'
+    receiver_email = 'anjalirc'
+    return render(request,"chat.html",{"current_email":current_email,"receiver_email":receiver_email})

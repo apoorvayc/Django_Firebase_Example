@@ -23,6 +23,9 @@ urlpatterns = [
     path('match_stud_to_vol/', sviews.match_stud_to_vol),
     path('add_volunteer/', vviews.add_volunteer),
     path('temp_func/', vviews.temp_func),
-    path('frontend_to_backend/', vviews.frontend_to_backend)
+    path('frontend_to_backend/', vviews.frontend_to_backend),
+    path('stud_chat/',sviews.stud_chat),
+    path('vol_chat/',vviews.vol_chat),
+    path('messages/',sviews.messages)
 ]
 
