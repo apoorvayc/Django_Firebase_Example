@@ -5,21 +5,26 @@
 <body>
 <div class = "container">
 <div class="row">
-<a href="http://127.0.0.1:8000/received_messages/{{email}}"><input type="button" value="Received Messages"></a>
+<a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>
 </div>
 <div class="row">
 <h>Welcome {{ email }}! Connect with the students to start a chat. Keep Learning! <h>
 </div>
 <div class = "row">
-{% for match in match_list %}
-	<div class = "col-md-4">
-		<h> Student {{ match.0 }}</h><br>
-		<h> Subject {{ match.1 }}</h><br>
-		<h> Day {{ match.2 }}</h><br>
-		<h> From {{ match.3 }} To {{ match.4}} </h><br>
-		<a href = "http://127.0.0.1:8000/vol_chat/{{match.0}}" ><input type="button" value="Connect Student"></a>
+			
+						{% for match in match_list %}
+									<div class = "col-md-4" style=" padding:0;">
+										<h> Student {{ match.0 }}</h><br>
+										<h> Subject {{ match.1 }}</h><br>
+										<h> Day {{ match.2 }}</h><br>
+										<h> From {{ match.3 }} To {{ match.4}} </h><br>
+										<a href = "/vol_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>
 	
-	</div>
-{% endfor %}
+									
+									</div>
+						{% endfor %}
+
+
+</div>
 </body>
 </html>

@@ -1,0 +1,39 @@
+
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+</head>
+<body>
+<div class = "container">
+
+<div class="row">
+<h>Following volunteers have sent you messages! <h>
+</div>
+	<div class = "row">
+		<div class = "col-md-4">
+		<h> Volunteer </h>
+		</div>
+		<div class = "col-md-4">
+		<h> Last Message Received</h>
+		</div>
+		<div class = "col-md-4">
+		<h> Click to Connect </h>
+		</div>
+	
+	</div>
+{% for match in rec_msgs_list %}
+	<div class = "row">
+		<div class = "col-md-4">
+		<h> {{ match.0 }}</h>
+		</div>
+		<div class = "col-md-4">
+		<h> {{ match.1 }}</h>
+		</div>
+		<div class = "col-md-4">
+		<a href = "/stud_chat/{{match.0}}" ><input type="button" value="Chat"></a>
+		</div>
+	
+	</div>
+{% endfor %}
+</body>
+</html>

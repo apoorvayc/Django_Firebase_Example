@@ -116,11 +116,22 @@ def match_stud_to_vol(request) :
     return render(request,"stud_dash.html",{"email":stud_email,"match_list":match_list})
 
 def stud_chat(request,name):
-    student_email = 'rupalimc'
-    volunteer_email = name
-    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email})
+    name = name.split("@")
+    volunter_email = name[0]
+    volunter_sub = name[1]
+    volunter_day = name[2]
+    volunter_from = name[3]
+    volunter_to = name[4]     
+    student_email = "rupalimc"
+    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunter_sub,"volunteer_day":volunter_day,"volunteer_from":volunter_from,"volunteer_to":volunter_to})
     
-def messages(request) :
-    current_email = 'rupalimc'
-    receiver_email = 'anjalirc'
-    return render(request,"chat.html",{"current_email":current_email,"receiver_email":receiver_email})
+def messages(request,name) :
+    current_email = name
+    rec_msgs = database.child("Received_Messages").child(name).get().val()
+    rec_msgs_list = []
+    for i in rec_msgs :
+        rec_msgs_list.append([i, rec_msgs[i]])
+    return render(request,"stud_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
+
+
+    

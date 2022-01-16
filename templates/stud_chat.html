@@ -3,13 +3,27 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
 <body onload="Previous_messages();">
+<style>
+tr{
+height: 30px;
+display: block;
+}
+#chatbox{
+display: block;
+  height: 540px;
+  overflow-y: scroll;
+  }
+</style>
 <div class = "container">
+	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
+		<h> Your messages will be sent to the volunteer. They will reply you soon. </h>
+	</div>
 	<div id = "chat-window" style = "border: 1px solid black;">
 		<div class="row" style = "height:10%;background-color:blue;margin-left:0;margin-right:0;">
 		<h2>{{ volunteer_email }}</h2>
 		
 		</div>
-		<div class="row" style = "height:80%;margin-left:0;margin-right:0;background-color:lightblue;">
+		<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;background-color:lightblue;">
 		 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 
 <script>
@@ -26,10 +40,13 @@
 	 
 	var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
 	msg_added.limitToLast(1).on('child_added', function (data) {
-        var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+        
+		var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
 		ref_chat_id.once('value', function(snapshot1) {
+		
 		var idd = snapshot1.val().id;
 		var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd+'/');
+		
 		ref_msg.once('value',function(snapshot2){
 		var chatbox = document.getElementById("chatbox");
 		var row = chatbox.insertRow(-1);
@@ -83,7 +100,9 @@
 	  }
 	  }
 	  );
-	 
+	  var rec_msg_ref = firebase.database().ref('Received_Messages/{{ volunteer_email }}/');
+	 rec_msg_ref.set({'{{ student_email }}':document.getElementById("stud_msg").value}); 
+	
 	 
 	 }
 	 

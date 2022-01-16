@@ -26,7 +26,9 @@ urlpatterns = [
     path('temp_func/', vviews.temp_func),
     path('frontend_to_backend/', vviews.frontend_to_backend),
     path('stud_chat/<str:name>',sviews.stud_chat),
-    path('vol_chat/',vviews.vol_chat),
-    path('messages/',sviews.messages)
+    path('vol_chat/<str:name>',vviews.vol_chat),
+    path('received_messages_by_stud/<str:name>',sviews.messages),
+    path('received_messages_by_vol/<str:name>',vviews.messages),
+    path('confirm_stud_vol/<str:name>', vviews.confirm_stud_vol)
 ]
 

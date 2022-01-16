@@ -3,13 +3,35 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
 <body onload = "Previous_messages();">
+<style>
+tr{
+height: 30px;
+display: block;
+}
+#chatbox{
+display: block;
+  height: 500px;
+  overflow-y: scroll;
+  }
+</style>
 <div class = "container">
+	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
+		<h> Your messages will be sent to the student. They will reply you soon. </h>
+	</div>
+	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
+		<div class = "col-md-9">
+		<h> After your conversation, if you have confirmed to teach this student, please select the button given beside. </h>
+		</div>
+		<div class = "col-md-3">
+		<a href="/confirm_stud_vol/{{student_email}}@{{student_sub}}@{{student_day}}@{{student_from}}@{{student_to}}"><input type="button" value="Confirm" style = "width:100%; height: 100%;  padding:0;"></a>
+		</div>
+	</div>
 	<div id = "chat-window" style = "border: 1px solid black;">
 		<div class="row" style = "height:10%;background-color:blue;margin-left:0;margin-right:0;">
 		<h2>{{ student_email }}</h2>
 		
 		</div>
-		<div class="row" style = "height:80%;margin-left:0;margin-right:0;background-color:lightblue;">
+		<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;background-color:lightblue;">
 		 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 
 <script>
@@ -21,20 +43,24 @@
   storageBucket: "ctrldebthack.appspot.com",
   messagingSenderId: "231552560212",
   appId: "1:231552560212:web:aacb5f70bc1ecb342951c1"
-};
+	};
      firebase.initializeApp(firebaseConfig);
 	 
 	var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
 	msg_added.limitToLast(1).on('child_added', function (data) {
-        var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+        
+		var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
 		ref_chat_id.once('value', function(snapshot1) {
+		
 		var idd = snapshot1.val().id;
 		var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd+'/');
+		
 		ref_msg.once('value',function(snapshot2){
 		var chatbox = document.getElementById("chatbox");
 		var row = chatbox.insertRow(-1);
 		row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
 		});
+		
 		
      })
 	 });
@@ -44,6 +70,7 @@
 	 chatbox.innerHTML = "";
 	 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
 		ref_chat_id.once('value', function(snapshot1) {
+		if (snapshot1.exists()){
 		var idd = snapshot1.val().id;
 		idd = parseInt(idd)-1;
 		while (idd > 0){
@@ -55,6 +82,7 @@
 		row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
 		});
 		idd = idd - 1;
+		}
 		}
 
 	 });
@@ -82,7 +110,8 @@
 	  }
 	  }
 	  );
-	 
+	 var rec_msg_ref = firebase.database().ref('Received_Messages/{{ student_email }}/');
+	 rec_msg_ref.set({'{{ volunteer_email }}':document.getElementById("vol_msg").value}); 
 	 
 	 }
 	 

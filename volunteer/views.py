@@ -69,10 +69,15 @@ def frontend_to_backend(request) :
 	return render(request,"temp.html")
     
 
-def vol_chat(request):
-    student_email = 'rupalimc'
-    volunteer_email = 'anjalirc'
-    return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email})
+def vol_chat(request,name):
+    name = name.split("@")
+    student_email = name[0]
+    student_sub = name[1]
+    student_day = name[2]
+    student_from = name[3]
+    student_to = name[4]     
+    volunteer_email = "anjalirc"
+    return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"student_sub":student_sub,"student_day":student_day,"student_from":student_from,"student_to":student_to})
     
     
 def get_subject_wise_students(day,vol_category,subject) :
@@ -148,4 +153,13 @@ def match_vol_to_stud(request) :
                         continue
     
     return render(request,"vol_dash.html",{"email":vol_email,"match_list":match_list})
+    
+def messages(request,name) :
+    current_email = name
+    rec_msgs = database.child("Received_Messages").child(name).get().val()
+    rec_msgs_list = []
+    for i in rec_msgs :
+        rec_msgs_list.append([i, rec_msgs[i]])
+    return render(request,"vol_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
+    
     
