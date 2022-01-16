@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import pyrebase
 from django.http import HttpResponse
-
+from intervaltree import Interval, IntervalTree
 # Create your views here.
 config = {
     'apiKey': "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
@@ -65,7 +65,7 @@ def frontend_to_backend(request) :
 		firstname = request.POST.get("fname")
 		lastname = request.POST.get("lname")
 		print(firstname,lastname)
-		return HttpResponse("From input read")
+		
 	return render(request,"temp.html")
     
 
@@ -73,3 +73,79 @@ def vol_chat(request):
     student_email = 'rupalimc'
     volunteer_email = 'anjalirc'
     return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email})
+    
+    
+def get_subject_wise_students(day,vol_category,subject) :
+    student_obj = []
+    for std in range(int(vol_category.split('-')[0]),int(vol_category.split('-')[1])+1,1) :
+        student_obj.append(database.child("Student_Day").child(day).child(std).child(subject).get().val())
+    return student_obj
+
+def get_day_wise_student_pref(stud_email,day) :
+    return database.child('Student_Availability').child(stud_email).child(day).get().val()
+    
+def match_vol_to_stud(request) :
+    #get student details in function
+    """
+            {
+        'Monday': {
+                    'from':'10',
+                    'to':'13'	
+                    },
+        'Tuesday':{
+            'from':'5',
+            'to':'8'	
+            },
+        'Sunday': {
+                    'from':'12',
+                    'to':'15'	
+                    }
+            
+        }
+    """
+    match_list = []
+    #vol_std = "11-12"
+    #write func for stud category 
+    vol_category = "11-12"
+    vol_email = "anjalirc"
+    vol_subj_list = ["History","Geography"]
+    vol_avail = {'Monday': {'from':'10','to':'13'},'Tuesday':{'from':'5','to':'8'},'Sunday': {'from':'12','to':'15'}}
+    for i in vol_avail :
+        day = i
+        vol_fro = int(vol_avail[i]["from"])
+        vol_to = int(vol_avail[i]["to"])
+        print("Volunteer details")
+        print(vol_email,day, vol_fro,vol_to)
+        for j in vol_subj_list :
+            subject = j
+            print(subject)
+            students = get_subject_wise_students(day,vol_category,subject)
+            print(students)
+            for stud in students :
+                if stud :
+                    print(stud,)
+                    try :
+                        tree = IntervalTree()
+                        for s in stud :
+                            stud_email = stud[s]["student"]
+                            print(stud_email)
+                            time = get_day_wise_student_pref(stud_email,day)
+                            print(time)
+                            fro = int(time["from"])
+                            to = int(time["to"])
+                            tree.addi(fro,to,stud_email)
+                        overlap = tree.overlap(vol_fro,vol_to) 
+                        print("Overlaps if any for studnets",overlap)
+                        for t in overlap :
+                            start = t[0] if t[0] > vol_fro else vol_fro
+                            end = t[1] if t[1] < vol_to else vol_to
+                            
+                            match_str = t[2] + "@" + subject + "@" + day + "@" + str(start) + "@" + str(end)
+                            
+                            match_list.append(match_str.split("@"))
+                            #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
+                    except :
+                        continue
+    
+    return render(request,"vol_dash.html",{"email":vol_email,"match_list":match_list})
+    

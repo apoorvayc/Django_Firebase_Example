@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('add_student/', sviews.add_student),
     path('match_stud_to_vol/', sviews.match_stud_to_vol),
+    path('match_vol_to_stud/', vviews.match_vol_to_stud),
     path('add_volunteer/', vviews.add_volunteer),
     path('temp_func/', vviews.temp_func),
     path('frontend_to_backend/', vviews.frontend_to_backend),

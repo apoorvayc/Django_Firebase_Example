@@ -35,3 +35,22 @@ stud_subj_data = {
     "rupalimc":{"1":"Hindi","2":"History","3":"Geography"}
 }
 database.child("Student_Subject_Preference").set(stud_subj_data)
+
+
+for i in stud_avail_data :
+    email = i
+    print(email)
+    stud_grade_details = database.child("Student_Registration").child(email).get().val()
+    stud_grade = stud_grade_details["grade"]
+    print(stud_grade)
+    day_time = stud_avail_data[i]
+    for j in day_time :
+        day = j
+        time = day_time[j]
+        time_from = time["from"]
+        time_to = time["to"]
+        stud_subj_details = database.child("Student_Subject_Preference").child(email).get().val()
+        print(stud_subj_details)
+        for sub in stud_subj_details[1:] :        
+            database.child("Student_Day").child(day).child(stud_grade).child(sub).push({"student":email})
+
