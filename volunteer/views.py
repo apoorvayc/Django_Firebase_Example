@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.contrib import auth
 import pyrebase
 from django.http import HttpResponse
 from intervaltree import Interval, IntervalTree
+
 # Create your views here.
 config = {
     'apiKey': "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
@@ -16,8 +18,130 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 database = firebase.database()
-# Create your views here.
+authe = firebase.auth()
 
+def vsign_in(request):
+    if "uid" not in request.session.keys():
+        request.session['uid'] = None
+        request.session['email'] = None
+
+    if request.session['uid'] != None:
+        currentuserrid = request.session['email']
+        print("Email ", currentuserrid)
+        match_list = []
+        vol_email = request.session['email'].split("@")[0]
+        vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
+        vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
+        vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
+        return render(request,"vol_dash.html")
+    return render(request, "vsignin.html")
+
+def vpost_signin(request):
+    for key, value in request.POST.items():
+        print('{} => {}'.format(key, value))
+    if "uid" not in request.session.keys():
+        request.session['uid'] = None
+    if request.session['uid'] == None:
+        if request.POST.get('email') == None or request.POST.get("password") == None:
+            # return redirect('http://127.0.0.1:8000/')
+            return HttpResponse("you are not signed in")
+        request.session['email'] = request.POST.get('email')
+        email = request.POST.get('email')
+        ename = email.split("@")[0]
+        password = request.POST.get('password')
+        try:
+            user = authe.sign_in_with_email_and_password(email, password)
+            session_id = user['idToken']
+            request.session['uid'] = session_id
+            request.session['email'] = email
+            ename = request.session['email'].split("@")[0]
+            name = database.child('Volunteer_Registration').get().val()
+            for n in name:
+                if ename == n:
+                    newname = (name[n]["name"])
+            match_list = []
+            vol_email = request.session['email'].split("@")[0]
+            vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
+            vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
+            vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
+            return render(request,"vol_dash.html")
+
+        except:
+            message = "Invalid Credentials!!"
+            return render(request, "vsignin.html", {"msg": message})
+
+    else:
+        ename = request.session['email'].split("@")[0]
+        name = database.child('Volunteer_Registration').get().val()
+        for n in name:
+            if ename == n:
+                newname = (name[n]["name"])
+
+        match_list = []
+        vol_email = request.session['email'].split("@")[0]
+        vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
+        vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
+        vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
+        return render(request,"vol_dash.html")
+
+
+def vsign_up(request):
+
+    return render(request, "vsignup.html")
+
+
+def vinfo(request):
+    if request.method == "POST":
+
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        sname = email.split("@")[0]
+        password = request.POST.get('password')
+        # grade
+        grade = request.POST.get('displayValue')
+        print(grade)
+        # subject
+        subject = request.POST.getlist('check')
+        print(subject)
+
+        try:
+            user = authe.create_user_with_email_and_password(email, password)
+        except:
+            message = "Unable to create Account. Try Again!!"
+            return render(request, "vsignup.html", {"msg": message})
+        request.session["email"] = email
+        database.child("Volunteer_Registration").child(sname).set({"name": name, "grade": grade})
+        database.child("Volunteer_Subject_Preference").child(sname).set({"subject": subject})
+
+    return render(request, "vinfo.html",{"refresh":"0"})
+
+
+def vpost_signup(request):
+    if request.method == "POST":
+
+        email = request.session["email"]
+        sname = email.split("@")[0]
+
+        # availability
+        dayvalue = request.POST.get('dayValue')
+        fromvalue = request.POST.get('fromtime')
+        tovalue = request.POST.get('totime')
+
+        database.child("Volunteer_Availability").child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
+
+        return render(request, "vinfo.html", {"refresh":"1"})
+    #return render(request, "vdashboard.html", {"n": name})
+
+def vlogout(request):
+    if "uid" in request.session.keys():
+        if request.session['uid'] != None:
+            request.session['uid'] = None
+            request.session['email'] = None
+        else:
+            message = "user is not logged in"
+            return render(request, "vsignin.html")
+        auth.logout(request)
+    return render(request, 'vsignin.html')
 
 def add_volunteer(request) :
 	email = "adityarc@gmail.com"
@@ -90,31 +214,28 @@ def get_day_wise_student_pref(stud_email,day) :
     return database.child('Student_Availability').child(stud_email).child(day).get().val()
     
 def match_vol_to_stud(request) :
-    #get student details in function
-    """
-            {
-        'Monday': {
-                    'from':'10',
-                    'to':'13'	
-                    },
-        'Tuesday':{
-            'from':'5',
-            'to':'8'	
-            },
-        'Sunday': {
-                    'from':'12',
-                    'to':'15'	
-                    }
-            
-        }
-    """
     match_list = []
-    #vol_std = "11-12"
-    #write func for stud category 
-    vol_category = "11-12"
-    vol_email = "anjalirc"
-    vol_subj_list = ["History","Geography"]
-    vol_avail = {'Monday': {'from':'10','to':'13'},'Tuesday':{'from':'5','to':'8'},'Sunday': {'from':'12','to':'15'}}
+    vol_email = request.session['email'].split("@")[0]
+    vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
+    vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
+    vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
+       
+    for i in vol_avail_data :
+        day = i
+        for j in vol_avail_data[i] :
+            time_from = vol_avail_data[i][j]["from"]
+            time_to = vol_avail_data[i][j]["to"]
+            for sub in vol_subj_list :        
+                try :
+                    database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
+                except :
+                    database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
+                
+    return render(request,"vol_dash.html")
+"""
+
+
+    
     for i in vol_avail :
         day = i
         vol_fro = int(vol_avail[i]["from"])
@@ -153,7 +274,7 @@ def match_vol_to_stud(request) :
                         continue
     
     return render(request,"vol_dash.html",{"email":vol_email,"match_list":match_list})
-    
+ """   
 def messages(request,name) :
     current_email = name
     rec_msgs = database.child("Received_Messages").child(name).get().val()
@@ -162,4 +283,16 @@ def messages(request,name) :
         rec_msgs_list.append([i, rec_msgs[i]])
     return render(request,"vol_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
     
+def confirm_stud_vol(request) :
+    student_email = request.GET["student_email"]
+    student_sub = request.GET["student_sub"]
+    student_day = request.GET["student_day"]
+    student_from = request.GET["student_from"]
+    student_to = request.GET["student_to"]
+    volunteer_email = "anjalirc"
+    time = database.child("Volunteer_Availability").child(volunteer_email).child(student_day).get().val()
+     
+        
+    
+    return HttpResponse("Done")
     

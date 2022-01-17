@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import auth
 import pyrebase
 from django.http import HttpResponse
 from intervaltree import Interval, IntervalTree
@@ -17,43 +18,115 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 database = firebase.database()
+authe = firebase.auth()
+
+def sign_in(request):
+    if "uid" not in request.session.keys():
+        request.session['uid'] = None
+        request.session['email'] = None
+
+    if request.session['uid'] != None:
+        currentuserrid = request.session['email']
+        print("Email ", currentuserrid)
+        return match_stud_to_vol(request)
+    return render(request, "signIn.html")
+
+def post_signin(request):
+    for key, value in request.POST.items():
+        print('{} => {}'.format(key, value))
+    if "uid" not in request.session.keys():
+        request.session['uid'] = None
+    if request.session['uid'] == None:
+        if request.POST.get('email') == None or request.POST.get("password") == None:
+            # return redirect('http://127.0.0.1:8000/')
+            return HttpResponse("you are not signed in")
+        request.session['email'] = request.POST.get('email')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        try:
+            user = authe.sign_in_with_email_and_password(email, password)
+            session_id = user['idToken']
+            request.session['uid'] = session_id
+            request.session['email'] = email
+            ename = request.session['email'].split("@")[0]
+            name = database.child('Student_Registration').get().val()
+            for n in name:
+                if ename == n:
+                    newname = (name[n]["name"])
+
+            return match_stud_to_vol(request)
+
+        except:
+            message = "Please check your emailID / Password"
+            return render(request, "signIn.html", {"msg": message})
+
+    else:
+        ename = request.session['email'].split("@")[0]
+        name = database.child('Student_Registration').get().val()
+        for n in name:
+            if ename == n:
+                newname = (name[n]["name"])
+
+        return match_stud_to_vol(request)
+        
+def sign_up(request):
+
+    return render(request, "signUp.html")
 
 
+def sinfo(request):
+    if request.method == "POST":
+
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        sname = email.split("@")[0]
+        password = request.POST.get('password')
+        # grade
+        grade = request.POST.get('displayValue')
+        print(grade)
+        # subject
+        subject = request.POST.getlist('check')
+        print(subject)
+
+        try:
+            user = authe.create_user_with_email_and_password(email, password)
+
+        except:
+            message = "Unable to create Account. Try Again!!"
+            return render(request, "signUp.html", {"msg": message})
+        request.session["email"] = email
+        database.child('Student_Registration').child(sname).set({"name": name, "grade": grade})
+        database.child("Student_Subject_Preference").child(sname).set({"subject": subject})
+
+    return render(request, "sinfo.html", {"refresh": "0"})
 
 
+def post_signup(request):
+    if request.method == "POST":
 
-def add_student(request) :
-    email = "apoorvayc@gmail.com"
-    email = email.split("@")[0]
-    std = "6"
-    database.child("Student_Reg").set(
-                                        {   
-                                            email : {"name":"Apoorva"}
-                                        }
-                                    )
-    database.child("Student_Availability").set(
-                                        {   
-                                            email : {
-                                                        "Monday": {
-                                                                    "from":"7",
-                                                                    "to":"10"   
-                                                                    },
-                                                        "Tuesday":{
-                                                            "from":"7",
-                                                            "to":"10"   
-                                                            }
-                                                        }
+        email = request.session["email"]
+        sname = email.split("@")[0]
 
-                                        }
-                                    ) 
-    database.child("Student_Subject_List").set(
-                                            { email: {
-                                                    "1":"Maths",
-                                                    "2":"Science"
-                                            }
-                                        }
-        )
-    return HttpResponse("Done")
+        # availability
+        dayvalue = request.POST.get('dayValue')
+        fromvalue = request.POST.get('fromtime')
+        tovalue = request.POST.get('totime')
+
+        database.child('Student_Availability').child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
+
+        return render(request, "sinfo.html", {"refresh":"1"})
+
+    #return render(request, "sdashboard.html", {"n": name})
+def logout(request):
+    if "uid" in request.session.keys():
+        if request.session['uid'] != None:
+            request.session['uid'] = None
+            request.session['email'] = None
+        else:
+            message = "user is not logged in"
+            return render(request, "signIn.html")
+        auth.logout(request)
+    return render(request, 'signIn.html')
 
 def get_subject_wise_volunteers(day,stud_category,subject) :
     return database.child("Day").child(day).child(stud_category).child(subject).get().val()
@@ -61,68 +134,70 @@ def get_subject_wise_volunteers(day,stud_category,subject) :
 def get_day_wise_volunteer_pref(vol_email,day) :
     return database.child('Volunteer_Availability').child(vol_email).child(day).get().val()
 
-def check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day) :
-    match_list = []
-    for t in overlap :
-        start = t[0] if t[0] > stud_fro else stud_fro
-        end = t[1] if t[1] < stud_to else stud_to
-        
-        match_str = t[2] + "@" + subject + "@" + day + "@" + str(start) + "@" + str(end)
-        print(match_str)
-        match_list.append(match_str.split("@"))
-    return match_list
+
     
 def match_stud_to_vol(request) :
     #get student details in function
     match_list = []
-    stud_std = "11"
+    stud_email = request.session['email'].split("@")[0]
+    stud_grade = database.child("Student_Registration").child(stud_email).get().val()["grade"]
+
     #write func for stud category 
-    stud_category = "11-12"
-    stud_email = "rupalimc"
-    stud_subj_list = ["Hindi","History","Geography"]
-    stud_avail = {"Sunday":{"from":"13","to":"16"},"Saturday":{"from":"13","to":"16"}}
-    for i in stud_avail :
+    stud_category = "8-10"
+    
+    stud_subj_list = database.child("Student_Subject_Preference").child(stud_email).child("subject").get().val()
+    stud_avail_data = database.child("Student_Availability").child(stud_email).get().val()
+    
+
+    for i in stud_avail_data :
         day = i
-        stud_fro = int(stud_avail[i]["from"])
-        stud_to = int(stud_avail[i]["to"])
-        print("Student details")
-        print(stud_email,day,stud_fro,stud_to)
-        for j in stud_subj_list :
-            subject = j
-            print(subject)
-            volunteers = get_subject_wise_volunteers(day,stud_category,subject)
-            print(volunteers)
-            try :
-                tree = IntervalTree()
-                for v in volunteers :
-                    vol_email = volunteers[v]["volunteer"]
-                    time = get_day_wise_volunteer_pref(vol_email,day)
-                    fro = int(time["from"])
-                    to = int(time["to"])
-                    tree.addi(fro,to,vol_email)
-                overlap = tree.overlap(stud_fro,stud_to) 
-                print("Overlaps if any for volunters",overlap)
-                for t in overlap :
-                    start = t[0] if t[0] > stud_fro else stud_fro
-                    end = t[1] if t[1] < stud_to else stud_to
-                    
-                    match_str = t[2] + "@" + subject + "@" + day + "@" + str(start) + "@" + str(end)
-                    
-                    match_list.append(match_str.split("@"))
-                    #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
-            except :
-                continue
+        for j in stud_avail_data[i] :
+            time_from = stud_avail_data[i][j]["from"]
+            stud_fro = int(time_from.split(":")[0])*60+int(time_from.split(":")[1])
+            time_to = stud_avail_data[i][j]["to"]
+            stud_to = int(time_to.split(":")[0])*60+int(time_to.split(":")[1])
+            print(stud_fro,stud_to)
+            for sub in stud_subj_list :
+                database.child("Student_Day").child(day).child(stud_grade).child(sub).push({"student":stud_email})
+                volunteers = get_subject_wise_volunteers(day,stud_category,sub)
+                try :
+                    tree = IntervalTree()
+                    for v in volunteers.keys() :
+                        vol_email = v
+                        time = get_day_wise_volunteer_pref(vol_email,day)
+                        print(time)
+                        for t in time :
+                            fro = int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1])
+                            to = int(time[t]["to"].split(":")[0])*60+int(time[t]["to"].split(":")[1])
+                            tree.addi(fro,to,vol_email)
+                    print(tree)
+                    overlap = tree.overlap(stud_fro,stud_to) 
+                    print("Overlaps if any for volunters",overlap)
+                    for t in overlap :
+                        start = t[0] if t[0] > stud_fro else stud_fro
+                        end = t[1] if t[1] < stud_to else stud_to
+                        start_hr = str(start//60).zfill(2)
+                        start_min = str(start%60).zfill(2)
+                        end_hr = str(end//60).zfill(2)
+                        end_min = str(end%60).zfill(2)
+                        
+                        match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min)
+                        
+                        match_list.append(match_str.split("@"))
+                        #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
+                except :
+                    continue
     
     return render(request,"stud_dash.html",{"email":stud_email,"match_list":match_list})
 
 def stud_chat(request,name):
     name = name.split("@")
-    volunter_email = name[0]
+    volunteer_email = name[0]
     volunter_sub = name[1]
     volunter_day = name[2]
     volunter_from = name[3]
     volunter_to = name[4]     
-    student_email = "rupalimc"
+    student_email = request.session["email"].split("@")[0]
     return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunter_sub,"volunteer_day":volunter_day,"volunteer_from":volunter_from,"volunteer_to":volunter_to})
     
 def messages(request,name) :
@@ -132,6 +207,5 @@ def messages(request,name) :
     for i in rec_msgs :
         rec_msgs_list.append([i, rec_msgs[i]])
     return render(request,"stud_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
-
 
     

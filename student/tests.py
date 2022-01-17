@@ -16,6 +16,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 database = firebase.database()
+"""
 # Create your tests here.
 stud_reg_data = {
     "riteshgc":{"name":"Ritesh","grade":"7"},
@@ -54,3 +55,5 @@ for i in stud_avail_data :
         for sub in stud_subj_details[1:] :        
             database.child("Student_Day").child(day).child(stud_grade).child(sub).push({"student":email})
 
+"""
+database.child("Student_Subject_Preference").child("diptejjc").update({"3":"History"})

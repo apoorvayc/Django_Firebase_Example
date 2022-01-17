@@ -1,0 +1,18 @@
+.vol-pref-drop{
+    position:relative;width:200px;height:25px;border:0;padding:0;margin:0;
+}
+.vol-pref-drop-select{
+    position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;
+}
+.vol-pref-display{
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:183px;
+    width:180px\9;
+    #width:180px;
+    height:23px;
+    height:21px\9;
+    #height:18px;
+    border:1px solid #556;
+}

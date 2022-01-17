@@ -14,26 +14,31 @@ display: block;
   overflow-y: scroll;
   }
 </style>
-<div class = "container">
-	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
-		<h> Your messages will be sent to the student. They will reply you soon. </h>
-	</div>
-	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
-		<div class = "col-md-9">
-		<h> After your conversation, if you have confirmed to teach this student, please select the button given beside. </h>
-		</div>
-		<div class = "col-md-3">
-		<a href="/confirm_stud_vol/{{student_email}}@{{student_sub}}@{{student_day}}@{{student_from}}@{{student_to}}"><input type="button" value="Confirm" style = "width:100%; height: 100%;  padding:0;"></a>
-		</div>
-	</div>
-	<div id = "chat-window" style = "border: 1px solid black;">
-		<div class="row" style = "height:10%;background-color:blue;margin-left:0;margin-right:0;">
-		<h2>{{ student_email }}</h2>
-		
-		</div>
-		<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;background-color:lightblue;">
-		 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+
+	function Confirm_Stud_Vol(){
+	console.log("here");
+		$.ajax(
+		{
+			type:"GET",
+			url: "/confirm_stud_vol/",
+			data:{
+					 student_email: "{{student_email}}",
+					 student_sub: "{{student_sub}}",
+					 student_day : "{{student_day}}",
+					 student_from: "{{student_from}}",
+					 student_to: "{{student_to}}"
+			},
+			success: function( data ) 
+			{
+				alert("You are connected with {{ student_email }}");
+			}
+		 });
+	 }; 
+</script>
 <script>
  var firebaseConfig = {
   apiKey: "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
@@ -115,7 +120,29 @@ display: block;
 	 
 	 }
 	 
+
+	 
 </script>
+<div class = "container">
+	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
+		<h> Your messages will be sent to the student. They will reply you soon. </h>
+	</div>
+	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
+		<div class = "col-md-9">
+		<h id="alert_msg"> After your conversation, if you have confirmed to teach this student, please select the button given beside. </h>
+		</div>
+		<div class = "col-md-3">
+		<input type="button" value="Confirm" id="confirm" onclick="Confirm_Stud_Vol();" style = "width:100%; height: 100%; padding:0;">
+		</div>
+	</div>
+	<div id = "chat-window" style = "border: 1px solid black;">
+		<div class="row" style = "height:10%;background-color:blue;margin-left:0;margin-right:0;">
+		<h2>{{ student_email }}</h2>
+		
+		</div>
+		<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;background-color:lightblue;">
+		 
+
 <table id="chatbox">
 </table>
 		</div>

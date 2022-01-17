@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body onload="Reset_form();">
+<script>
+	function Reset_form(){
+	document.getElementById("tempform").reset();
+	if ({{ refresh }} == 1){
+	alert("Preference Saved");
+	}
+	}
+</script>
+<form method="POST" id="tempform" action="/vpost_signup/">
+  {% csrf_token %}
+  <section>
+            <div class="avail">
+                <div class="avail-overlay">
+                    <div class="container">
+                        <div><h4>Availability</h4></div><br>
+                        <label for="appt">Choose a time for your meeting:</label>
+                        <div class="row"><label>Day :</label>
+                            <div id="appt" style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;"><br>
+                                <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
+                                        onchange="document.getElementById('dayValue').value=this.options[this.selectedIndex].text; document.getElementById('dayValue').value=this.options[this.selectedIndex].value;" required>
+
+                                    <option></option>
+                                    <option type="submit" name="mon">Monday</option>
+                                    <option type="submit" name="tue">Tuesday</option>
+                                    <option type="submit" name="wed">Wednesday</option>
+                                    <option type="submit" name="thurs">Thursday</option>
+                                    <option type="submit" name="fri">Friday</option>
+                                    <option type="submit" name="sat">Saturday</option>
+                                </select>
+
+                                <input type="text" name="dayValue" id="dayValue"
+                                       placeholder="add/select a value" onfocus="this.select()"
+                                       style="position:absolute;top:0px;left:0px;width:183px;width:180px\9;#width:180px;height:23px; height:21px\9;#height:18px;border:1px solid #556;">
+                                <input type="hidden">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label>from :
+                                <input type="time" id="from" name="fromtime"
+                                       min="09:00" max="18:00" required>
+                                <input name="fromValue" id="fromValue" type="hidden">
+                            </label>
+                            <label>to :
+                                <input type="time" id="to" name="totime"
+                                       min="09:00" max="18:00" required>
+                                <input name="toValue" id="toValue" type="hidden">
+                            </label>
+                            <small class="text-muted">Office hours are 9am to 6pm</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+  <input type="submit" id="add"  value="Save and Add New Preference">
+
+</form>
+<a href="/match_vol_to_stud/"><input type="button" value="Click here after saving your preferences"></a>
+</body>
+</html>

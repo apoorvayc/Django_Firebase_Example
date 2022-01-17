@@ -77,8 +77,8 @@ vol_avail_data = {
     'bhagyeshjc':
         {
         'Monday': {
-                    'from':'11',
-                    'to':'14'	
+                    'from':'9',
+                    'to':'17'	
                     },
         'Tuesday':{
             'from':'5',
@@ -149,8 +149,8 @@ vol_avail_data = {
     'chinmayirc':
         {
         'Monday': {
-                    'from':'17',
-                    'to':'20'	
+                    'from':'9',
+                    'to':'17'	
                     },
         'Tuesday':{
             'from':'5',
@@ -164,13 +164,13 @@ vol_subj_data = {
     'adityarc':{'1':'Maths','2':'Science'},
     'apoorvayc':{'1':'English','2':'Hindi'},
     'anjalirc':{'1':'History','2':'Geography'},
-    'bhagyeshjc':{'1':'Sanskrit','2':'Marathi'},
+    'bhagyeshjc':{'1':'Maths','2':'Marathi'},
     'rutujapc':{'1':'Maths-Algebra','2':'English-Grammar'},
     'ompc':{'1':'Maths','2':'Science'},
     'aayushmc':{'1':'English','2':'Hindi'},
     'kartikimc':{'1':'History','2':'Geography'},
     'tanayrc':{'1':'Sanskrit','2':'Marathi'},
-    'chinmayirc':{'1':'Maths-Geometry','2':'English-Grammar'}
+    'chinmayirc':{'1':'Maths-Geometry','2':'Science'}
 }
 database.child('Volunteer_Subject_Preference').set(vol_subj_data)
 
