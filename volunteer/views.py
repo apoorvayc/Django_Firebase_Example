@@ -269,6 +269,7 @@ def messages(request,name) :
     return render(request,"vol_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
     
 def confirm_stud_vol(request) :
+    """
     student_email = request.GET["student_email"]
     student_sub = request.GET["student_sub"]
     student_day = request.GET["student_day"]
@@ -343,6 +344,7 @@ def confirm_stud_vol(request) :
                         pass
             except :
                     pass
-
+    
+    """
     return HttpResponse("Done")
     
