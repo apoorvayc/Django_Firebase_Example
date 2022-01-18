@@ -157,8 +157,15 @@ def match_stud_to_vol(request) :
             time_to = stud_avail_data[i][j]["to"]
             stud_to = int(time_to.split(":")[0])*60+int(time_to.split(":")[1])
             print(stud_fro,stud_to)
+
             for sub in stud_subj_list :
-                database.child("Student_Day").child(day).child(stud_grade).child(sub).push({"student":stud_email})
+                emails = database.child("Student_Day").child(day).child(stud_grade).child(sub).get().val()
+                try :
+                    if stud_email not in emails.keys :
+                        database.child("Student_Day").child(day).child(stud_grade).child(sub).update({stud_email:"1"})
+                except :
+                        database.child("Student_Day").child(day).child(stud_grade).child(sub).set({stud_email:"1"})
+                
                 volunteers = get_subject_wise_volunteers(day,stud_category,sub)
                 try :
                     tree = IntervalTree()

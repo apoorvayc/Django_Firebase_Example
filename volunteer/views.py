@@ -33,7 +33,7 @@ def vsign_in(request):
         vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
         vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
         vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
-        return render(request,"vol_dash.html")
+        return match_vol_to_stud(request)
     return render(request, "vsignin.html")
 
 def vpost_signin(request):
@@ -59,12 +59,8 @@ def vpost_signin(request):
             for n in name:
                 if ename == n:
                     newname = (name[n]["name"])
-            match_list = []
-            vol_email = request.session['email'].split("@")[0]
-            vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
-            vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
-            vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
-            return render(request,"vol_dash.html")
+            
+            return match_vol_to_stud(request)
 
         except:
             message = "Invalid Credentials!!"
@@ -77,12 +73,7 @@ def vpost_signin(request):
             if ename == n:
                 newname = (name[n]["name"])
 
-        match_list = []
-        vol_email = request.session['email'].split("@")[0]
-        vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
-        vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
-        vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
-        return render(request,"vol_dash.html")
+        return match_vol_to_stud(request)
 
 
 def vsign_up(request):
@@ -200,7 +191,7 @@ def vol_chat(request,name):
     student_day = name[2]
     student_from = name[3]
     student_to = name[4]     
-    volunteer_email = "anjalirc"
+    volunteer_email = request.session['email'].split("@")[0]
     return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"student_sub":student_sub,"student_day":student_day,"student_from":student_from,"student_to":student_to})
     
     
@@ -222,59 +213,53 @@ def match_vol_to_stud(request) :
        
     for i in vol_avail_data :
         day = i
-        for j in vol_avail_data[i] :
+        for j in vol_avail_data[i] : 
             time_from = vol_avail_data[i][j]["from"]
+            vol_fro = int(time_from.split(":")[0])*60+int(time_from.split(":")[1])
             time_to = vol_avail_data[i][j]["to"]
-            for sub in vol_subj_list :        
+            vol_to = int(time_to.split(":")[0])*60+int(time_to.split(":")[1])
+            
+            for sub in vol_subj_list : 
+                emails = database.child("Day").child(day).child(vol_category).child(sub).get().val()
                 try :
-                    database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
+                    if vol_email not in emails.keys :
+                        database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
                 except :
-                    database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
-                
-    return render(request,"vol_dash.html")
-"""
+                        database.child("Day").child(day).child(vol_category).child(sub).set({vol_email:"1"})
+                students = get_subject_wise_students(day,vol_category,sub)
+                print(students)
+                for stud in students :
+                    if stud :
+                        try :
+                            tree = IntervalTree()
+                            for s in stud.keys() :
+                                stud_email = s
+                                time = get_day_wise_student_pref(stud_email,day)
+                                print(time)
+                                for t in time :
+                                    fro = int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1])
+                                    to = int(time[t]["to"].split(":")[0])*60+int(time[t]["to"].split(":")[1])
+                                    tree.addi(fro,to,stud_email)
+                            print(tree)
+                            overlap = tree.overlap(vol_fro,vol_to) 
+                            print("Overlaps if any for studnets",overlap)
+                            for t in overlap :
+                                start = t[0] if t[0] > vol_fro else vol_fro
+                                end = t[1] if t[1] < vol_to else vol_to
+                                start_hr = str(start//60).zfill(2)
+                                start_min = str(start%60).zfill(2)
+                                end_hr = str(end//60).zfill(2)
+                                end_min = str(end%60).zfill(2)
 
-
-    
-    for i in vol_avail :
-        day = i
-        vol_fro = int(vol_avail[i]["from"])
-        vol_to = int(vol_avail[i]["to"])
-        print("Volunteer details")
-        print(vol_email,day, vol_fro,vol_to)
-        for j in vol_subj_list :
-            subject = j
-            print(subject)
-            students = get_subject_wise_students(day,vol_category,subject)
-            print(students)
-            for stud in students :
-                if stud :
-                    print(stud,)
-                    try :
-                        tree = IntervalTree()
-                        for s in stud :
-                            stud_email = stud[s]["student"]
-                            print(stud_email)
-                            time = get_day_wise_student_pref(stud_email,day)
-                            print(time)
-                            fro = int(time["from"])
-                            to = int(time["to"])
-                            tree.addi(fro,to,stud_email)
-                        overlap = tree.overlap(vol_fro,vol_to) 
-                        print("Overlaps if any for studnets",overlap)
-                        for t in overlap :
-                            start = t[0] if t[0] > vol_fro else vol_fro
-                            end = t[1] if t[1] < vol_to else vol_to
-                            
-                            match_str = t[2] + "@" + subject + "@" + day + "@" + str(start) + "@" + str(end)
-                            
-                            match_list.append(match_str.split("@"))
-                            #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
-                    except :
-                        continue
-    
+                                match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min)
+                                
+                                match_list.append(match_str.split("@"))
+                                #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
+                        except :
+                            continue
+   
     return render(request,"vol_dash.html",{"email":vol_email,"match_list":match_list})
- """   
+ 
 def messages(request,name) :
     current_email = name
     rec_msgs = database.child("Received_Messages").child(name).get().val()
@@ -289,10 +274,75 @@ def confirm_stud_vol(request) :
     student_day = request.GET["student_day"]
     student_from = request.GET["student_from"]
     student_to = request.GET["student_to"]
-    volunteer_email = "anjalirc"
+    volunteer_email = request.session['email'].split("@")[0]
     time = database.child("Volunteer_Availability").child(volunteer_email).child(student_day).get().val()
-     
-        
+    for t in time :
+        tree = IntervalTree()
+        tree.addi(int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]),int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]))
+        overlap = tree.overlap(int(student_from.split(":")[0])*60+int(student_from.split(":")[1]),int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) 
+        if overlap :
+            print("here")
+            if (int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) and int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) :
+                database.child("Volunteer_Availability").child(volunteer_email).child(student_day).child(t).remove()
+            else :
+                if int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) < int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) :
+                    database.child("Volunteer_Availability").child(volunteer_email).child(student_day).child(t).remove()
+                    database.child("Volunteer_Availability").child(volunteer_email).child(student_day).push({"from":time[t]["from"],"to":student_from})
+                if int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) > int(student_to.split(":")[0])*60+int(student_to.split(":")[1]) :
+                    try :
+                        database.child("Volunteer_Availability").child(volunteer_email).child(student_day).child(t).remove()
+                    except :
+                        pass
+                    database.child("Volunteer_Availability").child(volunteer_email).child(student_day).push({"from":student_to, "to":time[t]["to"]})
+
+            times = database.child("Volunteer_Availability").child(volunteer_email).child(student_day).get().val()
+
+            try :
+                if volunteer_email not in times.keys :
+                    vol_category = database.child("Volunteer_Registration").child(volunteer_email).get().val()["grade"]
+                    try :
+                        database.child("Day").child(student_day).child(vol_category).child(student_sub).child(volunteer_email).remove()
+                    except :
+                        pass
+            except :
+                    pass
     
+    
+    
+    
+    time = database.child("Student_Availability").child(student_email).child(student_day).get().val()
+    for t in time :
+        tree = IntervalTree()
+        tree.addi(int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]),int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]))
+        overlap = tree.overlap(int(student_from.split(":")[0])*60+int(student_from.split(":")[1]),int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) 
+        if overlap :
+            print("here2")
+            if (int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) and int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) :
+                database.child("Student_Availability").child(student_email).child(student_day).child(t).remove()
+            else :
+                if int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) < int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) :
+                    print("here i shouldnt be")
+                    database.child("Student_Availability").child(student_email).child(student_day).child(t).remove()
+                    database.child("Student_Availability").child(student_email).child(student_day).push({"from":time[t]["from"],"to":student_from})
+                if int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) > int(student_to.split(":")[0])*60+int(student_to.split(":")[1]) :
+                    print("here i should be")
+                    try :
+                        database.child("Student_Availability").child(student_email).child(student_day).child(t).remove()
+                    except :
+                        pass
+                    database.child("Student_Availability").child(student_email).child(student_day).push({"from":student_to,"to":time[t]["to"]})
+            
+            times = database.child("Student_Availability").child(student_email).child(student_day).get().val()
+
+            try :
+                if student_email not in times.keys :
+                    stud_grade = database.child("Student_Registration").child(student_email).get().val()["grade"]
+                    try :
+                        database.child("Student_Day").child(student_day).child(stud_grade).child(student_sub).child(student_email).remove()
+                    except :
+                        pass
+            except :
+                    pass
+
     return HttpResponse("Done")
     

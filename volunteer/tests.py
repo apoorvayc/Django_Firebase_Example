@@ -16,7 +16,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 database = firebase.database()
-
+"""
 # Create your tests here.
 vol_reg_data = {
     'adityarc':{'name':'Aditya', 'grade':'5-7'},
@@ -190,3 +190,8 @@ for i in vol_avail_data :
         print(vol_subj_details)
         for sub in vol_subj_details[1:] :        
             database.child("Day").child(day).child(vol_grade).child(sub).push({"volunteer":email})
+"""
+
+database.child("dummy").child("child1").set({"child2":"val2","child3":"val3"})
+
+database.child("dummy").child("child1").child("child2").remove()
