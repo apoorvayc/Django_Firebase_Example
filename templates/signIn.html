@@ -13,7 +13,14 @@
 </head>
 <body class="text-center">
 
-<main class="form-signin">
+<main class="form-signin container"><style>@media (min-width: 1400px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 500px;}}
+    @media (min-width: 1200px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 400px;
+    }
+    }</style>
 <form method="post" action="/post_signin/">
     {% csrf_token %}
   <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="no" width="72" height="57">

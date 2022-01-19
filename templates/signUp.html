@@ -9,14 +9,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Volunteer Sign Up</title>
+    <title>Student Sign Up</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
 
 </head>
 <body>
-<div class="container">
+<div class="container"><style>@media (min-width: 1400px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 500px;}}
+    @media (min-width: 1200px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 400px;
+    }
+    }</style>
     <main class="form-signin">
         <form method="post" action="/sinfo/">
             {% csrf_token %}

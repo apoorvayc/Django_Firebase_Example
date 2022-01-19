@@ -1,0 +1,300 @@
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <title>Gyandaan |</title>
+      {% load static %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/332a215f17.js" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+      <!-- Navbar-->
+      <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top" id="mainNav">
+          <div class="container">
+              <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                  <img class="img-fluid" src="{% static 'images/favicon.png' %}">
+                <span class="logo">Gyandaan</span>
+              </a>
+              <button class="navbar-toggler navbar-toggler-right"
+              type="button" data-toggle="collapse" data-target="#navbarResponsive"
+              aria-controls="navbarResponsive" aria-expanded="false"
+              aria-label="Toggle navigation">Menu
+              <i class="fas fa-bars ml-1"></i>
+            </button>
+              <div class="collapse navbar-collapse" id="navbarResponsive">
+                  <ul class="navbar-nav text-uppercase ml-auto">
+                      <li class="nav-item">
+                  <a class="nav-link js-scroll-trigger" href="#home">Home</a></li>
+                  <li class="nav-item">
+                 <a class="nav-link js-scroll-trigger" href="#causes">Causes</a></li>
+                  <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#project">Projects</a></li>
+                <li class="nav-item">
+                  <a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+               <li class="nav-item">
+                  <a class="nav-link js-scroll-trigger" href="#team">Team</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#blog">Blog</a></li>
+                 <li class="nav-item">
+                <a class="nav-link js-scroll-trigger" href="#contact">Contact</a></li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
+      <!-- Hero-->
+      <div class="header">
+          <div class="info">
+          <h4><a href="#header">G Y A N D A A N</a></h4>
+            <h1>Make a Contirbution to Knowledge</h1>
+
+          </div>
+      </div>
+      <!---About us-->
+<!-- About-->
+<section class="about-section mt-5" id="about">
+  <div class="container">
+      <div class="text-center">
+          <h2 class="section-heading text-uppercase">About</h2>
+          <h3 class="section-subheading text-muted">
+            GYANDAAN</h3>
+      </div>
+      <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container-fluid">
+
+        <div class="row">
+          <div class="col-xl-5 col-lg-6 d-flex justify-content-center align-items-stretch" data-aos="fade-right">
+             <img src="{% static 'images/about.jpg' %}" class="img-fluid" alt="">
+          </div>
+
+          <div class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5"
+          data-aos="fade-left">
+            <h3>Shramdaan</h3>
+            <p>Voluntary contribution of knowledge</p>
+            <div class="icon-box" data-aos="zoom-in" data-aos-delay="100">
+              <div class="icon"><i class="fas fa-file-invoice-dollar"></i></div>
+
+              <p class="description">‘Gyan’ means knowledge and ‘daan’ means donation.</p>
+            </div>
+
+            <div class="icon-box" data-aos="zoom-in" data-aos-delay="200">
+              <div class="icon"><i class="fas fa-chalkboard-teacher"></i></i></div>
+
+              <p class="description">We make a voluntary contribution of citizens towards community education involving teaching, mentoring and helping someone in academics.</p>
+            </div>
+
+            <div class="icon-box" data-aos="zoom-in" data-aos-delay="300">
+              <div class="icon"><i class="fas fa-child"></i></div>
+
+              <p class="description">We are the way of helping our society and contributing for the overall upliftment of the students specially from the underprivileged and poor backgrounds who can't afford to enroll themselves into coaching classes and other courses.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+      <!--end of Section-->
+      <!-- Major Causes-->
+      <section class="mt-5 page-section" id="services">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-heading text-uppercase font-weight-bold">Make a Way Through !!!</h2>
+                <h3 class="section-subheading text-muted">
+                  Sign In As...</h3>
+            </div>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                      <i class="fas fa-circle fa-stack-2x text-danger"></i>
+                      <i class="fas fa-user-graduate fa-stack-1x fa-inverse"></i>
+
+                    </span>
+                    <h4 class="my-3"><a href="{% url 'signin' %}" style="color: inherit">Student</a></h4>
+                    <p class="text-muted">Enroll Yourself</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                      <i class="fas fa-circle fa-stack-2x text-warning"></i>
+                      <i class="fas fa-hands-helping fa-stack-1x fa-inverse"></i>
+                      </span>
+                    <h4 class="my-3"><a href="{% url 'vsignin' %}" style="color: inherit">Volunteer</a></h4>
+                    <p class="text-muted">Provide a helping hand</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                      <i class="fas fa-circle fa-stack-2x text-success"></i>
+                      <i class="fas fa-tshirt fa-stack-1x fa-inverse"></i>
+                    </span>
+
+                    <h4 class="my-3"><a href="{% url 'ad_signin' %}" style="color: inherit">Admin</a></h4>
+                    <p class="text-muted">  </p>
+                </div>
+            </div>
+        </div>
+    </section>
+      <!-- End of Major Causes-->
+
+
+    <!-- End About Section -->
+
+
+   <!-- Team-->
+   <section class="team-section mt-5"  id="team">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Our Amazing Team</h2>
+            <h3 class="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="team-member box">
+                  <div class="img-box">
+                    <img src="Images/team.jpg" alt="">
+                  </div>
+                  <div class="content">
+                    <h4 class="text-dark">Apoorva Chaudhari</h4>
+                    <p class="text-muted">Lorem ipsum dolor sit amet consectetur,
+                      adipisicing elit. Rerum, tempora!</p>
+                     </div>
+                      </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="team-member box">
+                <div class="img-box">
+                  <img src="Images/team2.jpg" alt="">
+                </div>
+                <div class="content">
+                  <h4 class="text-dark">Rutuja Chaudhari</h4>
+                  <p class="text-muted">Lorem ipsum dolor sit amet consectetur,
+                    adipisicing elit. Rerum, tempora!</p>
+                  </div>
+                </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="team-member box">
+              <div class="img-box">
+                <img src="Images/team3.jpg" alt="">
+              </div>
+              <div class="content">
+                <h4 class="text-color">Aditya Chaudhari</h4>
+                <p class="text-muted">Lorem ipsum dolor sit amet consectetur,
+                  adipisicing elit. Rerum, tempora!</p>
+                </div>
+              </div>
+        </div>
+       </div>
+    </div>
+</section>
+<!--End of Team Section-->
+
+
+
+
+
+<!--Footer Section-->
+
+<!-- ======= Contact Section ======= -->
+<section id="contact" class="contact mt-5">
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-heading text-uppercase">Contact Us</h2>
+      <h3 class="section-subheading text-muted">Let's make the world a better place</h3>
+  </div>
+
+    <div class="row">
+        <div class="col-lg-3"></div>
+      <div class="col-lg-6">
+        <div class="row">
+          <div class="col-lg-6 info">
+            <i class="fas fa-map"></i>
+            <h4>Address</h4>
+            <p>lorem ipsum Street,<br>Sao Paulo, SP 456879</p>
+          </div>
+          <div class="col-lg-6 info">
+            <i class="fas fa-phone"></i>
+            <h4>Call Us</h4>
+            <p>+999999999<br>+99999999</p>
+          </div>
+          <div class="col-lg-6 info">
+            <i class="fas fa-envelope"></i>
+            <h4>Email Us</h4>
+            <p>contact@test.com<br>test@example.com</p>
+          </div>
+          <div class="col-lg-6 info">
+            <i class="fas fa-clock"></i>
+            <h4>Working Hours</h4>
+            <p>Mon - Fri: 9AM to 6PM<br>Sunday: 9AM to 1PM</p>
+          </div>
+        </div>
+      </div>
+        <div class="col-lg-3"></div>
+
+    </div>
+  </div>
+</section>
+<!-- End Contact Section -->
+ <!-- ======= Footer ======= -->
+ <footer class="mt-5" id="footer">
+    <div class="container d-md-flex py-4">
+    <div class="mr-md-auto text-center text-md-left">
+      <div class="copyright">
+        &copy; Copyright <strong><span>Aditya</span></strong>. All Rights Reserved
+      </div>
+       </div>
+    <div class="social-links text-center text-md-right pt-3 pt-md-0">
+      <ul class="social">
+        <li class="list-item">
+          <a class="list-link" href="#">
+            <i class="fab fa-facebook"></i>
+          </a>
+        </li>
+        <li class="list-item">
+          <a class="list-link" href="#">
+            <i class="fab fa-twitter"></i>
+          </a>
+        </li>
+        <li class="list-item">
+          <a class="list-link" href="#">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </li>
+        <li class="list-item">
+          <a class="list-link" href="#">
+            <i class="fab fa-linkedin"></i>
+          </a>
+        </li>
+      </ul>
+     </div>
+  </div>
+</footer><!-- End Footer -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
