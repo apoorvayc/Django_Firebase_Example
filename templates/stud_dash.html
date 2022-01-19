@@ -11,6 +11,7 @@
 <h>Welcome {{ email }}! Connect with the volunteers to start a chat. Keep Learning! <h>
 </div>
 <div class = "row">
+{% if match_list %}
 {% for match in match_list %}
 	<div class = "col-md-4">
 		<h> Volunteer {{ match.0 }}</h><br>
@@ -21,5 +22,9 @@
 	
 	</div>
 {% endfor %}
+{% else %}
+	<h> You are currently not matched with any volunteer. Try adding more availability preferences. </h>
+	<a href="/post_signup/"><input type="button" value="Add Availability Preference"></a>
+{% endif %}
 </body>
 </html>

@@ -35,6 +35,8 @@ display: block;
 			success: function( data ) 
 			{
 				alert("You are connected with {{ student_email }}");
+				document.getElementById("alert_msg").innerHTML = "You are now connected"; 
+				document.getElementById("confirm").disabled = true;
 			}
 		 });
 	 }; 
@@ -70,6 +72,17 @@ display: block;
      })
 	 });
 	 function Previous_messages(){
+	 
+	 var ref_confirm_stud_vol = firebase.database().ref("Connected_stud_vol").child("{{student_email}}-{{volunteer_email}}-{{student_sub}}-{{student_day}}-{{student_from}}-{{student_to}}/");
+	 ref_confirm_stud_vol.once("value", function(snapshot){
+		if (snapshot.exists()){
+				document.getElementById("alert_msg").innerHTML = "You are now connected"; 
+				document.getElementById("confirm").disabled = true;
+		}
+		}
+		);
+	 
+	 
 	 try {
 	 var chatbox = document.getElementById("chatbox");
 	 chatbox.innerHTML = "";
@@ -116,7 +129,14 @@ display: block;
 	  }
 	  );
 	 var rec_msg_ref = firebase.database().ref('Received_Messages/{{ student_email }}/');
-	 rec_msg_ref.set({'{{ volunteer_email }}':document.getElementById("vol_msg").value}); 
+	 rec_msg_ref.set({'{{ volunteer_email }}':{
+	 "msg":document.getElementById("vol_msg").value,
+	 "subj": "{{student_sub}}",
+	 "day": "{{ student_day}}",
+	 "from": "{{ student_from }}",
+	 "to": "{{student_to}}"	 
+	 }
+	 }); 
 	 
 	 }
 	 

@@ -101,8 +101,17 @@ display: block;
 	  }
 	  );
 	  var rec_msg_ref = firebase.database().ref('Received_Messages/{{ volunteer_email }}/');
-	 rec_msg_ref.set({'{{ student_email }}':document.getElementById("stud_msg").value}); 
-	
+	 rec_msg_ref.set({'{{ student_email }}' : {
+	 "msg":document.getElementById("stud_msg").value,
+	 "subj": "{{volunteer_sub}}",
+	 "day": "{{ volunteer_day}}",
+	 "from": "{{ volunteer_from }}",
+	 "to": "{{volunteer_to}}"	 
+	 }
+	 });
+	 
+	 
+
 	 
 	 }
 	 
