@@ -28,11 +28,6 @@ def vsign_in(request):
     if request.session['uid'] != None:
         currentuserrid = request.session['email']
         print("Email ", currentuserrid)
-        match_list = []
-        vol_email = request.session['email'].split("@")[0]
-        vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
-        vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
-        vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
         return match_vol_to_stud(request)
     return render(request, "vsignin.html")
 
@@ -54,12 +49,6 @@ def vpost_signin(request):
             session_id = user['idToken']
             request.session['uid'] = session_id
             request.session['email'] = email
-            ename = request.session['email'].split("@")[0]
-            name = database.child('Volunteer_Registration').get().val()
-            for n in name:
-                if ename == n:
-                    newname = (name[n]["name"])
-            
             return match_vol_to_stud(request)
 
         except:
@@ -67,12 +56,6 @@ def vpost_signin(request):
             return render(request, "vsignin.html", {"msg": message})
 
     else:
-        ename = request.session['email'].split("@")[0]
-        name = database.child('Volunteer_Registration').get().val()
-        for n in name:
-            if ename == n:
-                newname = (name[n]["name"])
-
         return match_vol_to_stud(request)
 
 
@@ -121,6 +104,7 @@ def vpost_signup(request):
         database.child("Volunteer_Availability").child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
 
         return render(request, "vinfo.html", {"refresh":"1"})
+    return render(request, "vinfo.html", {"refresh":"0"})
     #return render(request, "vdashboard.html", {"n": name})
 
 def vlogout(request):
@@ -133,56 +117,6 @@ def vlogout(request):
             return render(request, "vsignin.html")
         auth.logout(request)
     return render(request, 'vsignin.html')
-
-def add_volunteer(request) :
-	email = "adityarc@gmail.com"
-	email = email.split("@")[0]
-	
-	database.child("Volunteer_Reg").child(email).set(
-										{"name":"Aditya"}
-									)
-	database.child("Volunteer_Availability").child(email).set(
-										{
-														"Monday": {
-																	"from":"8",
-																	"to":"12"	
-																	},
-														"Tuesday":{
-															"from":"5",
-															"to":"8"	
-															}
-														}
-
-									) 
-	database.child("Volunteer_Subject_List").child(email).set(
-											{
-													"1":"Maths",
-													"2":"Science"
-											}
-
-		)
-	return HttpResponse("Done")
-
-
-def temp_func(request) :
-	database.child("Day").child("Monday").child("5-7").child("Maths").push({"volunteer":"adityarc"})
-	database.child("Day").child("Monday").child("5-7").child("Science").push({"volunteer":"adityarc"	})
-	database.child("Day").child("Tuesday").child("5-7").child("Maths").push({"volunteer":"adityarc"})
-	database.child("Day").child("Tuesday").child("5-7").child("Science").push({"volunteer":"adityarc"})	
-	database.child("Day").child("Tuesday").child("5-7").child("Maths").push({"volunteer":"rutujapc"})
-	database.child("Day").child("Tuesday").child("5-7").child("English").push({"volunteer":"rutujapc"})
-	database.child("Day").child("Wednesday").child("5-7").child("Maths").push({"volunteer":"rutujapc"})
-	database.child("Day").child("Wednesday").child("5-7").child("English").push({"volunteer":"rutujapc"})													
-	return HttpResponse("Done")
-
-def frontend_to_backend(request) :
-	if request.method == "POST" :
-		firstname = request.POST.get("fname")
-		lastname = request.POST.get("lname")
-		print(firstname,lastname)
-		
-	return render(request,"temp.html")
-    
 
 def vol_chat(request,name):
     name = name.split("@")
@@ -203,22 +137,26 @@ def get_subject_wise_students(day,vol_category,subject) :
 
 def get_day_wise_student_pref(stud_email,day) :
     return database.child('Student_Availability').child(stud_email).child(day).get().val()
-    
+ 
+
+def get_time_in_minutes(time) :
+    return int(time.split(":")[0])*60+int(time.split(":")[1])
+     
 def match_vol_to_stud(request) :
     match_list = []
     vol_email = request.session['email'].split("@")[0]
     vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
     vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
     vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
-       
+    #day loop   
     for i in vol_avail_data :
         day = i
         for j in vol_avail_data[i] : 
             time_from = vol_avail_data[i][j]["from"]
-            vol_fro = int(time_from.split(":")[0])*60+int(time_from.split(":")[1])
+            vol_fro = get_time_in_minutes(time_from)
             time_to = vol_avail_data[i][j]["to"]
-            vol_to = int(time_to.split(":")[0])*60+int(time_to.split(":")[1])
-            
+            vol_to = get_time_in_minutes(time_to)
+            #subject loop
             for sub in vol_subj_list : 
                 emails = database.child("Day").child(day).child(vol_category).child(sub).get().val()
                 try :
@@ -226,23 +164,22 @@ def match_vol_to_stud(request) :
                         database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
                 except :
                         database.child("Day").child(day).child(vol_category).child(sub).set({vol_email:"1"})
+                #get students filtered by day,std and subject  
                 students = get_subject_wise_students(day,vol_category,sub)
-                print(students)
                 for stud in students :
                     if stud :
                         try :
                             tree = IntervalTree()
                             for s in stud.keys() :
                                 stud_email = s
+                                #get filtered students time preferences  
                                 time = get_day_wise_student_pref(stud_email,day)
-                                print(time)
                                 for t in time :
-                                    fro = int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1])
-                                    to = int(time[t]["to"].split(":")[0])*60+int(time[t]["to"].split(":")[1])
+                                    fro = get_time_in_minutes(time[t]["from"])
+                                    to = get_time_in_minutes(time[t]["to"])
                                     tree.addi(fro,to,stud_email)
-                            print(tree)
                             overlap = tree.overlap(vol_fro,vol_to) 
-                            print("Overlaps if any for studnets",overlap)
+                            print("Overlaps if any for students",overlap)
                             for t in overlap :
                                 start = t[0] if t[0] > vol_fro else vol_fro
                                 end = t[1] if t[1] < vol_to else vol_to
@@ -265,31 +202,32 @@ def messages(request,name) :
     rec_msgs = database.child("Received_Messages").child(name).get().val()
     rec_msgs_list = []
     for i in rec_msgs :
-        rec_msgs_list.append([i, rec_msgs[i]])
+        rec_msgs_list.append([i, rec_msgs[i]["subj"], rec_msgs[i]["day"], rec_msgs[i]["from"], rec_msgs[i]["to"], rec_msgs[i]["msg"]])
     return render(request,"vol_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
     
 def confirm_stud_vol(request) :
-    """
+    
     student_email = request.GET["student_email"]
     student_sub = request.GET["student_sub"]
     student_day = request.GET["student_day"]
     student_from = request.GET["student_from"]
     student_to = request.GET["student_to"]
     volunteer_email = request.session['email'].split("@")[0]
+
+    #update volunteer preferences
     time = database.child("Volunteer_Availability").child(volunteer_email).child(student_day).get().val()
     for t in time :
         tree = IntervalTree()
-        tree.addi(int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]),int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]))
-        overlap = tree.overlap(int(student_from.split(":")[0])*60+int(student_from.split(":")[1]),int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) 
+        tree.addi(get_time_in_minutes(time[t]["from"]),get_time_in_minutes(time[t]["to"]))
+        overlap = tree.overlap(get_time_in_minutes(student_from), get_time_in_minutes(student_to)) 
         if overlap :
-            print("here")
-            if (int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) and int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) :
+            if (get_time_in_minutes(time[t]["from"]) == get_time_in_minutes(student_from) and get_time_in_minutes(time[t]["to"]) == get_time_in_minutes(student_to)) :
                 database.child("Volunteer_Availability").child(volunteer_email).child(student_day).child(t).remove()
             else :
-                if int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) < int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) :
+                if get_time_in_minutes(time[t]["from"]) < get_time_in_minutes(student_from) :
                     database.child("Volunteer_Availability").child(volunteer_email).child(student_day).child(t).remove()
                     database.child("Volunteer_Availability").child(volunteer_email).child(student_day).push({"from":time[t]["from"],"to":student_from})
-                if int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) > int(student_to.split(":")[0])*60+int(student_to.split(":")[1]) :
+                if get_time_in_minutes(time[t]["to"]) > get_time_in_minutes(student_to) :
                     try :
                         database.child("Volunteer_Availability").child(volunteer_email).child(student_day).child(t).remove()
                     except :
@@ -297,7 +235,6 @@ def confirm_stud_vol(request) :
                     database.child("Volunteer_Availability").child(volunteer_email).child(student_day).push({"from":student_to, "to":time[t]["to"]})
 
             times = database.child("Volunteer_Availability").child(volunteer_email).child(student_day).get().val()
-
             try :
                 if volunteer_email not in times.keys :
                     vol_category = database.child("Volunteer_Registration").child(volunteer_email).get().val()["grade"]
@@ -308,25 +245,20 @@ def confirm_stud_vol(request) :
             except :
                     pass
     
-    
-    
-    
+    #update student preferences
     time = database.child("Student_Availability").child(student_email).child(student_day).get().val()
     for t in time :
         tree = IntervalTree()
-        tree.addi(int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]),int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]))
-        overlap = tree.overlap(int(student_from.split(":")[0])*60+int(student_from.split(":")[1]),int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) 
+        tree.addi(get_time_in_minutes(time[t]["from"]),get_time_in_minutes(time[t]["to"]))
+        overlap = tree.overlap(get_time_in_minutes(student_from),get_time_in_minutes(student_to)) 
         if overlap :
-            print("here2")
-            if (int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) and int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) == int(student_to.split(":")[0])*60+int(student_to.split(":")[1])) :
+            if (get_time_in_minutes(time[t]["from"]) == get_time_in_minutes(student_from) and get_time_in_minutes(time[t]["to"]) == get_time_in_minutes(student_to)) :
                 database.child("Student_Availability").child(student_email).child(student_day).child(t).remove()
             else :
-                if int(time[t]["from"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) < int(student_from.split(":")[0])*60+int(student_from.split(":")[1]) :
-                    print("here i shouldnt be")
+                if get_time_in_minutes(time[t]["from"]) < get_time_in_minutes(student_from) :
                     database.child("Student_Availability").child(student_email).child(student_day).child(t).remove()
                     database.child("Student_Availability").child(student_email).child(student_day).push({"from":time[t]["from"],"to":student_from})
-                if int(time[t]["to"].split(":")[0])*60+int(time[t]["from"].split(":")[1]) > int(student_to.split(":")[0])*60+int(student_to.split(":")[1]) :
-                    print("here i should be")
+                if get_time_in_minutes(time[t]["to"]) > get_time_in_minutes(student_to) :
                     try :
                         database.child("Student_Availability").child(student_email).child(student_day).child(t).remove()
                     except :
@@ -334,7 +266,6 @@ def confirm_stud_vol(request) :
                     database.child("Student_Availability").child(student_email).child(student_day).push({"from":student_to,"to":time[t]["to"]})
             
             times = database.child("Student_Availability").child(student_email).child(student_day).get().val()
-
             try :
                 if student_email not in times.keys :
                     stud_grade = database.child("Student_Registration").child(student_email).get().val()["grade"]
@@ -344,7 +275,6 @@ def confirm_stud_vol(request) :
                         pass
             except :
                     pass
-    
-    """
+    database.child("Connected_stud_vol").child(student_email + "-" + volunteer_email + "-" + student_sub + "-" + student_day + "-" + student_from + "-" + student_to).set({"connected":"1"})
     return HttpResponse("Done")
     
