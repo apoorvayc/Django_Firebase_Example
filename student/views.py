@@ -204,4 +204,3 @@ def messages(request,name) :
         rec_msgs_list.append([i, rec_msgs[i]["subj"], rec_msgs[i]["day"], rec_msgs[i]["from"], rec_msgs[i]["to"], rec_msgs[i]["msg"]])
     return render(request,"stud_rec_msgs.html",{"rec_msgs_list":rec_msgs_list})
 
-    

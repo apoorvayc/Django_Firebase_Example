@@ -1,30 +1,212 @@
-<html>
+<!--<html>-->
+<!--<head>-->
+<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class = "container">-->
+<!--<div class="row">-->
+<!--<a href="/received_messages_by_stud/{{email}}"><input type="button" value="Received Messages"></a>-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--<h>Welcome {{ email }}! Connect with the volunteers to start a chat. Keep Learning! </h>-->
+<!--</div>-->
+<!--<div class = "row">-->
+<!--{% if match_list %}-->
+<!--{% for match in match_list %}-->
+<!--	<div class = "col-md-4">-->
+<!--		<h> Volunteer {{ match.0 }}</h><br>-->
+<!--		<h> Subject {{ match.1 }}</h><br>-->
+<!--		<h> Day {{ match.2 }}</h><br>-->
+<!--		<h> From {{ match.3 }} To {{ match.4}} </h><br>-->
+<!--		<a href = "/stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Volunteer"></a>-->
+<!--	-->
+<!--	</div>-->
+<!--{% endfor %}-->
+<!--{% else %}-->
+<!--	<h> You are currently not matched with any volunteer. Try adding more availability preferences. </h>-->
+<!--	<a href="/post_signup/"><input type="button" value="Add Availability Preference"></a>-->
+<!--{% endif %}-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    {% load static %}
+    <link href="{% static 'css/vol_dash.css' %}" rel="stylesheet"/>
+
 </head>
 <body>
-<div class = "container">
-<div class="row">
-<a href="/received_messages_by_stud/{{email}}"><input type="button" value="Received Messages"></a>
+	<div class = "container">
+
+
+
+	<div class="admin-panel clearfix">
+      <div class="slidebar">
+        <div class="logo">
+          <a href="/home/"></a>
+        </div>
+        <ul>
+          <li><a href="#dashboard" id="targeted">dashboard</a></li>
+          <li><a href="#msg">Messages</a></li>
+          <li><a href="#connected">Connected</a></li>
+          <li><a href="#study">Study Material</a></li>
+
+        </ul>
+      </div>
+      <div class="main">
+
+        <div class="mainContent clearfix">
+          <div id="dashboard">
+
+
+            <h2 class="header text-center"><span class="icon"></span>Welcome {{ email }}! Connect with the volunteers to start a chat. <br>Keep Learning! </h2>
+
+
+          </div>
+           <div id="msg">
+             <h2 class="header">See Received Messages ...</h2>
+               <div class="row" style="margin-left: 25px;">
+               <a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>
+               </div>
+           </div>
+           <div id="connected" style="width: 521px">
+             <h2 class="header">Connected To...</h2>
+               <div class="container">
+                    {% for match in match_list %}
+						<div class = "col-md-4" style=" padding:0;">
+							<div class="row"> <h4> Volunteer {{ match.0 }}</h4></div>
+                            <div class="row"><h4> Subject: {{ match.1 }}</h4></div>
+                            <div class="row"><h4> Day: {{ match.2 }}</h4></div>
+                            <div class="row"><h4> From:  {{ match.3 }}  To: {{ match.4}}</h4></div>
+                            <a href = /stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>
+						</div>
+			        {% endfor %}
+                   </div>
+           </div>
+            <div id="study">
+             <h2 class="header text-center" style="text-decoration:underline;">Study Material</h2>
+                <div>
+                    <div class="row" style="margin-left: 25px;">
+                       <div class=" text-center"><h5 style="color:#007bff">Mathematics</h5></div>
+                   </div>
+                    <div class="row" style="margin-left: 25px;">
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/Gi44YOjAUGA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>Trigonometry</p>
+                            <div class="overlay trigger" src="https://www.youtube.com/embed/Gi44YOjAUGA" data-target="#videoModal" data-toggle="modal"></div>
+                            <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+                              <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                  <button type="button" class="close btn-round btn-primary" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                  <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <script>
+                                $(document).ready(function() {
+                                  autoPlayYouTubeModal();
+                                });
+
+                                function autoPlayYouTubeModal() {
+                                  var trigger = $('.trigger');
+                                  trigger.click(function(e) {
+                                    e.preventDefault();
+                                    var theModal = $(this).data("target");
+                                    var videoSRC = $(this).attr("src");
+                                    var videoSRCauto = videoSRC + "?autoplay=1";
+                                    $(theModal + ' iframe').attr('src', videoSRCauto);
+                                    $(theModal).on('hidden.bs.modal', function(e) {
+                                      $(theModal + ' iframe').attr('src', '');
+                                    });
+                                  });
+                                };
+                            </script>
+                        </div>
+                            <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/LwCRRUa8yTU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>Algebra</p>
+                        </div>
+                            <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/HfACrKJ_Y2w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>Calculus</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="row" style="margin-left: 25px;">
+                       <div class=" text-center"><h5 style="color:#007bff">English</h5></div>
+                   </div>
+                    <div class="row" style="margin-left: 25px;">
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/d0wV9EC3t14" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>English</p>
+                        </div>
+                            <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/H8IWiOogBAc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>English</p>
+                        </div>
+                            <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/PQG_gYFePD4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>English</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row" style="margin-left: 25px;">
+                       <div class=" text-center"><h5 style="color:#007bff">Science</h5></div>
+                   </div>
+                    <div class="row" style="margin-left: 25px;">
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/XSMjfvpDtTY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>Photosynthesis</p>
+                        </div>
+                            <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/0nCPA4XcNDw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>Electric Current</p>
+                        </div>
+                            <div class="col-md-1"></div>
+                        <div class="col-md-3">
+                            <iframe width="200" height="120" src="https://www.youtube.com/embed/Los_rGdjXeg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <p>Acids</p>
+                        </div>
+                    </div>
+                </div>
+
+
+           </div>
+
+
+         </div>
+     <ul class="statusbar">
+       <li class="logout"><a href="/logout/" style="color:blue">Logout</a></li>
+     </ul>
+   </div>
 </div>
-<div class="row">
-<h>Welcome {{ email }}! Connect with the volunteers to start a chat. Keep Learning! </h>
+
+
+
+
 </div>
-<div class = "row">
-{% if match_list %}
-{% for match in match_list %}
-	<div class = "col-md-4">
-		<h> Volunteer {{ match.0 }}</h><br>
-		<h> Subject {{ match.1 }}</h><br>
-		<h> Day {{ match.2 }}</h><br>
-		<h> From {{ match.3 }} To {{ match.4}} </h><br>
-		<a href = "/stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Volunteer"></a>
-	
-	</div>
-{% endfor %}
-{% else %}
-	<h> You are currently not matched with any volunteer. Try adding more availability preferences. </h>
-	<a href="/post_signup/"><input type="button" value="Add Availability Preference"></a>
-{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>

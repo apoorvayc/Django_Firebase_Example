@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render, HttpResponse, redirect
+from django.contrib import auth
+import json
 import datetime
 import pyrebase
 from django.contrib.auth import authenticate
@@ -48,8 +50,11 @@ def admin_post_signin(request):
         password = request.POST.get('password')
 
         try:
-            user = authenticate(email="admin@gmail.com", password='admin')
+
+            user = authe.sign_in_with_email_and_password(email, password)
+
             session_id = user['idToken']
+
             request.session['uid'] = session_id
             request.session['email1'] = email
             return render(request, "ad_dashboard.html")
@@ -57,16 +62,47 @@ def admin_post_signin(request):
             message = "Please check your emailID / Password"
             return render(request, "admin_signin.html", {"msg": message})
 
-
+    else:
+        return render(request, "ad_dashboard.html")
 
 
 def ad_dashboard(request):
     return render(request, "ad_dashboard.html")
 
 def add_admin(request) :
-    email = "apoorvayc@gmail.com"
-    password = "apoorva@123"
+    email = "admin@gmail.com"
+    password = "admin123"
     mail = email.split("@")[0]
 
     database.child("ADMIN").child(mail).set({"name": "Apoorva", "email" : email})
     return admin_post_signin(request)
+
+def ad_logout(request):
+    if "uid" in request.session.keys():
+        if request.session['uid'] != None:
+            request.session['uid'] = None
+            request.session['email'] = None
+        else:
+            message = "user is not logged in"
+            return render(request, "signIn.html")
+        auth.logout(request)
+    return render(request, 'admin_signin.html')
+
+
+def stud_data(request):
+    name =database.child("Student_Registration").get().val()
+    x=[]
+    for key, value in name.items():
+        x.append(value['name'])
+        print(value['name'])
+
+    return json.dumps({"stud_name" : x})
+
+def vol_data(request):
+    name =database.child("Student_Registration").get().val()
+    x=[]
+    for key, value in name.items():
+        x.append(value['name'])
+        print(value['name'])
+
+    return render(request, 'ad_dashboard.html',{"vol_name" : x})

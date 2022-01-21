@@ -1,10 +1,134 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Admin Dashboard</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--        add 3 buttons-->
+<!--see students-->
+<!--see volunteers-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    {% load static %}
+    <link href="{% static 'css/vol_dash.css' %}" rel="stylesheet"/>
+
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script >
+
+	function get_stud_data(){
+	console.log("here");
+		$.ajax(
+		{
+			type:"GET",
+			url: "/stud_data/",
+			data:{
+
+			},
+			success: function( stud_name )
+			{
+                console.log(stud_name);
+
+			}
+		 });
+	 };
+</script>
+
+	<div class = "container">
+<!--		<div class="row">-->
+<!--			<a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>-->
+<!--		</div>-->
+<!--		<div class="row">-->
+<!--			<h1>Welcome {{ email }}! Connect with the students to start a chat. Keep Learning! </h1>-->
+<!--		</div>-->
+<!--		<div class = "row">-->
+
+<!--			{% for match in match_list %}-->
+<!--						<div class = "col-md-4" style=" padding:0;">-->
+<!--							<h> Student {{ match.0 }}</h><br>-->
+<!--							<h> Subject {{ match.1 }}</h><br>-->
+<!--							<h> Day {{ match.2 }}</h><br>-->
+<!--							<h> From {{ match.3 }} To {{ match.4}} </h><br>-->
+<!--							<a href = "/vol_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>-->
+
+
+<!--						</div>-->
+<!--			{% endfor %}-->
+
+
+<!--		</div>-->
+<!--	</div>-->
+
+
+	<div class="admin-panel clearfix">
+      <div class="slidebar">
+        <div class="logo">
+          <a href="/home/"></a>
+        </div>
+        <ul>
+          <li><a href="#dashboard" id="targeted">dashboard</a></li>
+            <li><a href="#stud"><button onclick="get_stud_data();">Students</button></a></li>
+          <li><a href="#vol">Volunteers</a></li>
+
+
+        </ul>
+      </div>
+      <div class="main">
+
+        <div class="mainContent clearfix">
+          <div id="dashboard">
+
+
+            <h2 class="header text-center"><span class="icon"></span>Welcome {{ email }}!  </h2>
+
+
+          </div>
+           <div id="stud">
+             <h2 class="header">Names of Students</h2>
+               <div class="row" style="margin-left: 25px;">
+                   <h1>helllo {{stud_name|safe}}</h1>
+                    {% for name in stud_name %}
+                    <p>{{name}} </p>
+                    {% endfor %}
+               </div>
+           </div>
+
+            <div id="vol">
+             <h2 class="header">Names of Volunteers</h2>
+               <div class="row" style="margin-left: 25px;">
+                   {% for name in vol_name %}
+                    <p>{{name}} </p>
+                    {% endfor %}
+               </div>
+           </div>
+
+           <div id="connected" style="width: 521px">
+             <h2 class="header">Connected To...</h2>
+               <div class="container">
+
+                   </div>
+           </div>
+
+
+         </div>
+     <ul class="statusbar">
+       <li class="logout"><a href="/ad_logout/" style="color:blue">Logout</a></li>
+     </ul>
+   </div>
+</div>
+
+
+</div>
+
 
 </body>
 </html>

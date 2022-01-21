@@ -14,12 +14,19 @@
 </head>
 
 <body>
-<div class="container">
+<div class="container"><style>@media (min-width: 1400px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 500px;}}
+    @media (min-width: 1200px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 400px;
+    }
+    }</style>
     <main class="form-signin">
         <form method="post" action="/vinfo/">
             {% csrf_token %}
             <img class="mb-4" src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="no" width="72" height="57">
-            <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
+            <h1 class="h3 mb-3 fw-normal">Volunteer Sign Up</h1>
 
             <div class="form-floating">
                 <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name">
@@ -79,7 +86,7 @@
             </div>
 
 
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Next</button>
             <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
         </form>
     </main>
