@@ -189,12 +189,12 @@ def match_stud_to_vol(request) :
 def stud_chat(request,name):
     name = name.split("@")
     volunteer_email = name[0]
-    volunter_sub = name[1]
-    volunter_day = name[2]
-    volunter_from = name[3]
-    volunter_to = name[4]     
+    volunteer_sub = name[1]
+    volunteer_day = name[2]
+    volunteer_from = name[3]
+    volunteer_to = name[4]     
     student_email = request.session["email"].split("@")[0]
-    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunter_sub,"volunteer_day":volunter_day,"volunteer_from":volunter_from,"volunteer_to":volunter_to})
+    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunteer_sub,"volunteer_day":volunteer_day,"volunteer_from":volunteer_from,"volunteer_to":volunteer_to})
     
 def messages(request,name) :
     current_email = name
