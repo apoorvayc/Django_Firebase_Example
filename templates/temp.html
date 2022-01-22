@@ -1,22 +1,11 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<title></title>
 </head>
-<body onload="Reset_form();">
-<script>
-	function Reset_form(){
-	document.getElementById("tempform").reset();
-	}
-</script>
-<form method="POST" id="tempform" action="/frontend_to_backend/">
-  {% csrf_token %}
-  <label for="fname">First name:</label><br>
-  <input type="text" id="fname" name="fname"><br>
-  <label for="lname">Last name:</label><br>
-  <input type="text" id="lname" name="lname">
-  <input type="button" id="add" value="Save and Add new">
-  <input type="submit" value="Submit">
-</form>
+<body>
+<h> You are connected with {{volunteer_email }}<h><br>
+<h> Subject: {{student_sub}} </h>><br>
+<h> Day: {{student_day }}</h>><br>
+<h> Time: {{student_from}} to {{student_to}} </h>><br>
+<h> Click here to chat with volunteer <a href="http://127.0.0.1:8000/stud_chat/{{volunteer_email}}@{{student_sub}}@{{student_day}}@{{student_from}}@{{student_to}}">Chat with volunteer</a></h>
 </body>
 </html>

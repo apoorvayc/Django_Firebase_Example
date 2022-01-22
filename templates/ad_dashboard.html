@@ -22,51 +22,56 @@
 
 </head>
 <body>
+    <style>
+        #get_stud_data{
+	
+		}
+    </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script >
 
-	function get_stud_data(){
-	console.log("here");
+	function get_stud_data()
+	{
 		$.ajax(
 		{
 			type:"GET",
 			url: "/stud_data/",
 			data:{
-
 			},
 			success: function( stud_name )
-			{
-                console.log(stud_name);
-
+			{	
+					document.getElementById("student_row").innerHTML = "";
+					for(i=0;i<stud_name.length;i++)
+					{
+						document.getElementById("student_row").innerHTML +=  stud_name[i] + '<br>' 
+					}                    
 			}
+			
+		 });
+	 };
+	function get_vol_data()
+	{
+		$.ajax(
+		{
+			type:"GET",
+			url: "/vol_data/",
+			data:{
+			},
+			success: function( vol_name )
+			{	
+					document.getElementById("volunteer_row").innerHTML = "";
+					for(i=0;i<vol_name.length;i++)
+					{
+						document.getElementById("volunteer_row").innerHTML +=  vol_name[i] + '<br>' 
+					}                    
+			}
+			
 		 });
 	 };
 </script>
 
 	<div class = "container">
-<!--		<div class="row">-->
-<!--			<a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>-->
-<!--		</div>-->
-<!--		<div class="row">-->
-<!--			<h1>Welcome {{ email }}! Connect with the students to start a chat. Keep Learning! </h1>-->
-<!--		</div>-->
-<!--		<div class = "row">-->
 
-<!--			{% for match in match_list %}-->
-<!--						<div class = "col-md-4" style=" padding:0;">-->
-<!--							<h> Student {{ match.0 }}</h><br>-->
-<!--							<h> Subject {{ match.1 }}</h><br>-->
-<!--							<h> Day {{ match.2 }}</h><br>-->
-<!--							<h> From {{ match.3 }} To {{ match.4}} </h><br>-->
-<!--							<a href = "/vol_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>-->
-
-
-<!--						</div>-->
-<!--			{% endfor %}-->
-
-
-<!--		</div>-->
-<!--	</div>-->
 
 
 	<div class="admin-panel clearfix">
@@ -75,9 +80,9 @@
           <a href="/home/"></a>
         </div>
         <ul>
-          <li><a href="#dashboard" id="targeted">dashboard</a></li>
-            <li><a href="#stud"><button onclick="get_stud_data();">Students</button></a></li>
-          <li><a href="#vol">Volunteers</a></li>
+          <li><a href="#dashboard" id="targeted"><button onclick="get_dash_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Dashboard</button></a></li>
+            <li><a href="#stud"><button onclick="get_stud_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Students</button></a></li>
+          <li><a href="#vol"><button onclick="get_vol_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Volunteers</button></a></li>
 
 
         </ul>
@@ -94,20 +99,15 @@
           </div>
            <div id="stud">
              <h2 class="header">Names of Students</h2>
-               <div class="row" style="margin-left: 25px;">
-                   <h1>helllo {{stud_name|safe}}</h1>
-                    {% for name in stud_name %}
-                    <p>{{name}} </p>
-                    {% endfor %}
+               <div class="row"  style="margin-left: 25px;">
+                    <h id="student_row"></h>
                </div>
            </div>
 
             <div id="vol">
              <h2 class="header">Names of Volunteers</h2>
                <div class="row" style="margin-left: 25px;">
-                   {% for name in vol_name %}
-                    <p>{{name}} </p>
-                    {% endfor %}
+                   <h id="volunteer_row"></h>
                </div>
            </div>
 

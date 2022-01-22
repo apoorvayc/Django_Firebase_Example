@@ -96,13 +96,13 @@ def stud_data(request):
         x.append(value['name'])
         print(value['name'])
 
-    return json.dumps({"stud_name" : x})
+    return HttpResponse(json.dumps(x), content_type='application/json')
 
 def vol_data(request):
-    name =database.child("Student_Registration").get().val()
+    name =database.child("Volunteer_Registration").get().val()
     x=[]
     for key, value in name.items():
         x.append(value['name'])
         print(value['name'])
 
-    return render(request, 'ad_dashboard.html',{"vol_name" : x})
+    return HttpResponse(json.dumps(x), content_type='application/json')
