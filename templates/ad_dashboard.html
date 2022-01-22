@@ -83,7 +83,8 @@
           <li><a href="#dashboard" id="targeted"><button onclick="get_dash_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Dashboard</button></a></li>
             <li><a href="#stud"><button onclick="get_stud_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Students</button></a></li>
           <li><a href="#vol"><button onclick="get_vol_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Volunteers</button></a></li>
-
+	      <li><a href="#add"><button style="background: transparent;color: rgb(140,140,140);border: 0px;">Add Study Material</button></a></li>
+	
 
         </ul>
       </div>
@@ -108,6 +109,23 @@
              <h2 class="header">Names of Volunteers</h2>
                <div class="row" style="margin-left: 25px;">
                    <h id="volunteer_row"></h>
+               </div>
+           </div>
+            <div id="add">
+             <h2 class="header">Add Study Material (please enter Youtube Url/Drive Link for your video)</h2>
+               <div class="row" style="margin-left: 25px;">
+						<form method="POST" action="/add_study_material/">
+						{% csrf_token %}
+							<select name="displayValue" required>
+								<option>Choose Subject</option>
+								<option type="submit" value="English">English</option>
+								<option type="submit" value="Maths">Maths</option>
+								<option type="submit" value="Science">Science</option>
+							</select>
+				
+							<input type="text" name="url">
+				  <input type="submit">
+				  </form>
                </div>
            </div>
 

@@ -40,6 +40,46 @@
 
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script >
+
+	function get_study_material()
+	{
+		$.ajax(
+		{
+			type:"GET",
+			url: "/get_study_material/",
+			data:{
+			},
+			success: function( study_material )
+			{	
+			console.log(study_material);
+			var row = "<h2 class='header text-center' style='text-decoration:underline;'>Study Material</h2><div class='row' style='margin-left: 25px;color:#007bff'>";
+			var index = 0;
+					for (var key in study_material) 
+					{
+					   console.log(key);
+					   
+					   for (var k in study_material[key]) 
+					   {
+							for(i=1;i<study_material[key][k].length;i++) 
+							{
+								console.log(study_material[key][k][i])
+								row += "<div class='col-md-4'><iframe width='200' height='120' src='" + study_material[key][k][i] + "' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></div>";
+						   }
+						   
+						
+						}
+						row += "</div><div class='row' style='margin-left: 25px;color:#007bff'>";
+				   }
+				   row += "</div>"
+					document.getElementById("study").innerHTML = row;
+
+			}
+			
+		 });
+	 };
+</script>
 	<div class = "container">
 
 
@@ -56,7 +96,7 @@
           <li><a href="#dashboard" id="targeted">dashboard</a></li>
           <li><a href="#msg">Messages</a></li>
           <li><a href="#connected">Connected</a></li>
-          <li><a href="#study">Study Material</a></li>
+          <li><a href="#study"><button onclick="get_study_material();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Study Material</button></a></li>
 
         </ul>
       </div>
@@ -91,106 +131,8 @@
                    </div>
            </div>
             <div id="study">
-             <h2 class="header text-center" style="text-decoration:underline;">Study Material</h2>
-                <div>
-                    <div class="row" style="margin-left: 25px;">
-                       <div class=" text-center"><h5 style="color:#007bff">Mathematics</h5></div>
-                   </div>
-                    <div class="row" style="margin-left: 25px;">
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/Gi44YOjAUGA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>Trigonometry</p>
-                            <div class="overlay trigger" src="https://www.youtube.com/embed/Gi44YOjAUGA" data-target="#videoModal" data-toggle="modal"></div>
-                            <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
-                              <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                  <button type="button" class="close btn-round btn-primary" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                  <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="" allowfullscreen></iframe>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <script>
-                                $(document).ready(function() {
-                                  autoPlayYouTubeModal();
-                                });
-
-                                function autoPlayYouTubeModal() {
-                                  var trigger = $('.trigger');
-                                  trigger.click(function(e) {
-                                    e.preventDefault();
-                                    var theModal = $(this).data("target");
-                                    var videoSRC = $(this).attr("src");
-                                    var videoSRCauto = videoSRC + "?autoplay=1";
-                                    $(theModal + ' iframe').attr('src', videoSRCauto);
-                                    $(theModal).on('hidden.bs.modal', function(e) {
-                                      $(theModal + ' iframe').attr('src', '');
-                                    });
-                                  });
-                                };
-                            </script>
-                        </div>
-                            <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/LwCRRUa8yTU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>Algebra</p>
-                        </div>
-                            <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/HfACrKJ_Y2w" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>Calculus</p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div>
-                    <div class="row" style="margin-left: 25px;">
-                       <div class=" text-center"><h5 style="color:#007bff">English</h5></div>
-                   </div>
-                    <div class="row" style="margin-left: 25px;">
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/d0wV9EC3t14" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>English</p>
-                        </div>
-                            <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/H8IWiOogBAc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>English</p>
-                        </div>
-                            <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/PQG_gYFePD4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>English</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="row" style="margin-left: 25px;">
-                       <div class=" text-center"><h5 style="color:#007bff">Science</h5></div>
-                   </div>
-                    <div class="row" style="margin-left: 25px;">
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/XSMjfvpDtTY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>Photosynthesis</p>
-                        </div>
-                            <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/0nCPA4XcNDw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>Electric Current</p>
-                        </div>
-                            <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            <iframe width="200" height="120" src="https://www.youtube.com/embed/Los_rGdjXeg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            <p>Acids</p>
-                        </div>
-                    </div>
-                </div>
-
+             
+				
 
            </div>
 
@@ -207,8 +149,6 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
