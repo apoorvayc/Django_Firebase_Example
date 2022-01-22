@@ -3,6 +3,9 @@ from django.contrib import auth
 import pyrebase
 from django.http import HttpResponse
 from intervaltree import Interval, IntervalTree
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
 
 # Create your views here.
 config = {
@@ -276,5 +279,26 @@ def confirm_stud_vol(request) :
             except :
                     pass
     database.child("Connected_stud_vol").child(student_email + "-" + volunteer_email + "-" + student_sub + "-" + student_day + "-" + student_from + "-" + student_to).set({"connected":"1"})
+    mail_subj = "You're connected with Volunteer: "+volunteer_email
+
+    merge_data = {
+        "student_sub":student_sub,
+        "student_day":student_day,
+        "student_from":student_from,
+        "student_to":student_to,
+        "volunteer_email":volunteer_email
+    }
+    html_body = render_to_string("temp.html", merge_data)
+
+    message = EmailMultiAlternatives(
+       subject=mail_subj,
+       body="",
+       from_email="rutuom.12@gmail.com", 
+       to=["apoorvayc@gmail.com"]
+    )
+    message.attach_alternative(html_body, "text/html")
+    message.send(fail_silently=False)
+    
+    
     return HttpResponse("Done")
     

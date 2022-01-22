@@ -70,7 +70,7 @@
            <div id="msg">
              <h2 class="header">See Received Messages ...</h2>
                <div class="row" style="margin-left: 25px;">
-               <a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>
+               <a href="/received_messages_by_stud/{{email}}"><input type="button" value="Received Messages"></a>
                </div>
            </div>
            <div id="connected" style="width: 521px">
@@ -82,7 +82,7 @@
                             <div class="row"><h4> Subject: {{ match.1 }}</h4></div>
                             <div class="row"><h4> Day: {{ match.2 }}</h4></div>
                             <div class="row"><h4> From:  {{ match.3 }}  To: {{ match.4}}</h4></div>
-                            <a href = /stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>
+                            <a href = "/stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Volunteer"></a>
 						</div>
 			        {% endfor %}
                    </div>
