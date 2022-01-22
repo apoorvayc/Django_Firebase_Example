@@ -132,7 +132,9 @@ def get_time_in_minutes(time) :
 def match_stud_to_vol(request) :
     match_list = []
     stud_email = request.session['email'].split("@")[0]
+    print(stud_email)
     stud_grade = database.child("Student_Registration").child(stud_email).get().val()["grade"]
+
     stud_category = get_student_category(stud_grade)
     stud_subj_list = database.child("Student_Subject_Preference").child(stud_email).child("subject").get().val()
     stud_avail_data = database.child("Student_Availability").child(stud_email).get().val()

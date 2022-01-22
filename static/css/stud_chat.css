@@ -1,0 +1,142 @@
+$scrollbar-width: 10px;
+::-webkit-scrollbar {
+    width: $scrollbar-width;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: $scrollbar-width;
+    background-color: rgba(25,147,147,0.1);
+}
+::-webkit-scrollbar-thumb {
+     border-radius: $scrollbar-width;
+    background-color: rgba(25,147,147,0.2);;
+}
+
+html,body{
+    height: 100%;}
+body{
+    background: rgb(220,220,220);
+    background-size: cover;
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+    line-height: 1.3;
+    overflow: hidden;
+
+}
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://example.com/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+    url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+    url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+
+#chat-window{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: -webkit-fill-available;
+    max-height: 90%;
+    z-index: 2;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgb(0 0 0 / 20%);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.chat-title {
+    flex: 0 1 45px;
+    position: relative;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 10px 10px 10px 50px;
+}
+.chat-title .far{
+        position: relative;
+    font-size: xx-large;
+    padding-right: inherit;
+}
+.chat-title h2{
+    letter-spacing:1px;
+}
+tr{
+	height: 30px;
+	display: block;
+	}
+#chatbox{
+    flex: 1 1 auto;
+    color: rgba(255, 255, 255, 0.5);
+    height:500px;
+    position:relative;
+    display:block;
+    width: 100%;
+    overflow-y: scroll;
+
+}
+#chatbox tr:nth-child(odd){
+    animation: show-chat-odd 0.15s 1 ease-in;
+    -moz-animation: show-chat-odd 0.15s 1 ease-in;
+    -webkit-animation: show-chat-odd 0.15s 1 ease-in;
+color: #f8ffd1;
+}
+#chatbox tr:nth-child(even){
+    animation: show-chat-even 0.15s 1 ease-in;
+    -moz-animation: show-chat-even 0.15s 1 ease-in;
+    -webkit-animation: show-chat-even 0.15s 1 ease-in;
+color: #ffaef1
+}
+.text-box{
+    flex: 0 1 40px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    position: relative;
+}
+.text-box .msg_input{
+    width: 100%;
+    height: 48px;
+    font: 20px/48px "Noto Sans", sans-serif;
+    background: none;
+    color: #0AD5C1;
+    border: 0;
+    border-bottom: 1px solid rgba(25, 147, 147, 0.2);
+    outline: none;
+}
+.text-box .msg_send{
+    position: relative;
+    bottom: 3px;
+    right: 10px;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    max-width: 100%;
+    line-height: 1;
+    font-size: 30px;
+    background-color: green;
+}
+
+
+.bg{
+width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: url(https://images.unsplash.com/photo-1614849286447-fb815456e5a5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80;
+    filter: blur(80px);
+    transform: scale(1.2);
+}

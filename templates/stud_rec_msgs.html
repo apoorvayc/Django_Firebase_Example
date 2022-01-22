@@ -6,34 +6,35 @@
 <body>
 <div class = "container">
 
-<div class="row">
-<h>Following volunteers have sent you messages! <h>
-</div>
-	<div class = "row">
-		<div class = "col-md-4">
-		<h> Volunteer </h>
-		</div>
-		<div class = "col-md-4">
-		<h> Last Message Received</h>
-		</div>
-		<div class = "col-md-4">
-		<h> Click to Connect </h>
-		</div>
-	
+	<div class="row">
+	<h>Following volunteers have sent you messages! </h>
 	</div>
-{% for match in rec_msgs_list %}
-	<div class = "row">
-		<div class = "col-md-4">
-		<h> {{ match.0 }}</h>
+		<div class = "row">
+			<div class = "col-md-4">
+			<h> Volunteer </h>
+			</div>
+			<div class = "col-md-4">
+			<h> Last Message Received</h>
+			</div>
+			<div class = "col-md-4">
+			<h> Click to Connect </h>
+			</div>
+
 		</div>
-		<div class = "col-md-4">
-		<h> {{ match.5 }}</h>
+	{% for match in rec_msgs_list %}
+		<div class = "row">
+			<div class = "col-md-4">
+			<h> {{ match.0 }}</h>
+			</div>
+			<div class = "col-md-4">
+			<h> {{ match.5 }}</h>
+			</div>
+			<div class = "col-md-4">
+			<a href = "/stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Chat"></a>
+			</div>
+
 		</div>
-		<div class = "col-md-4">
-		<a href = "/stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Chat"></a>
-		</div>
-	
+	{% endfor %}
 	</div>
-{% endfor %}
 </body>
 </html>
