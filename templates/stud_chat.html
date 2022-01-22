@@ -1,134 +1,132 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	{% load static %}
+    <link href="{% static 'css/stud_chat.css' %}" rel="stylesheet"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
-<body onload="Previous_messages();">
-<style>
-tr{
-height: 30px;
-display: block;
-}
-#chatbox{
-display: block;
-  height: 540px;
-  overflow-y: scroll;
-  }
-</style>
-<div class = "container">
-	<div class="row" style = "height:5%;background-color:lightblue;margin-left:0;margin-right:0;">
-		<h> Your messages will be sent to the volunteer. They will reply you soon. </h>
+<body id="mainbody" onload="Previous_messages();" translate="no">
+
+	<div class = "container">
+		<div class="row " style = "height:5%;margin-left:0;margin-right:0;">
+			<div class="col-md-12 text-muted" style="padding-top:10px; width:50%">
+				<p class="text-center" style="color:darkgreen"> Your messages will be sent to the volunteer. They will reply you soon. </p>
+			</div>
+		</div>
+		<div id = "chat-window" style = "border: 1px solid black;">
+			<div class="row chat-title" style = "height:10%;margin-left:0;margin-right:0;">
+				<i class="far fa-user"></i><h2>{{ volunteer_email }}</h2>
+
+			</div>
+			<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;">
+				<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+
+				<script>
+				 var firebaseConfig = {
+				  apiKey: "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
+				  authDomain: "ctrldebthack.firebaseapp.com",
+				  databaseURL: "https://ctrldebthack-default-rtdb.firebaseio.com",
+				  projectId: "ctrldebthack",
+				  storageBucket: "ctrldebthack.appspot.com",
+				  messagingSenderId: "231552560212",
+				  appId: "1:231552560212:web:aacb5f70bc1ecb342951c1"
+				};
+					 firebase.initializeApp(firebaseConfig);
+
+					var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
+					msg_added.limitToLast(1).on('child_added', function (data) {
+
+						var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+						ref_chat_id.once('value', function(snapshot1) {
+
+						var idd = snapshot1.val().id;
+						var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd+'/');
+
+						ref_msg.once('value',function(snapshot2){
+						var chatbox = document.getElementById("chatbox");
+						var row = chatbox.insertRow(-1);
+						row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
+						});
+
+					 })
+					 });
+
+					 function Previous_messages(){
+					 try {
+					 var chatbox = document.getElementById("chatbox");
+					 chatbox.innerHTML = "";
+					 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+						ref_chat_id.once('value', function(snapshot1) {
+						var idd = snapshot1.val().id;
+						idd = parseInt(idd)-1;
+						while (idd > 0){
+
+
+						console.log(idd);
+						var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd.toString()+'/');
+						ref_msg.once('value',function(snapshot2){
+						var chatbox = document.getElementById("chatbox");
+						var row = chatbox.insertRow(0);
+						row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
+						});
+						idd = idd - 1;
+						}
+
+					 });
+					 }
+					 catch (err){
+					 console.log(err);
+					 }
+					}
+
+					 function Send_Message(){
+					 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
+					 ref_chat_id.once('value', function(snapshot) {
+					  if (snapshot.exists()) {
+						var idd = snapshot.val().id;
+						idd = (parseInt(idd)+1).toString();
+						ref_chat_id.set({'id': idd});
+						var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
+						ref.child(idd).set({'{{ student_email }}':document.getElementById("stud_msg").value});
+					  } else {
+						ref_chat_id.set({'id':'1'});
+						var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/1/');
+						ref.set({'{{ student_email }}': document.getElementById("stud_msg").value});
+					  }
+					  }
+					  );
+					  var rec_msg_ref = firebase.database().ref('Received_Messages/{{ volunteer_email }}/');
+					 rec_msg_ref.set({'{{ student_email }}' : {
+					 "msg":document.getElementById("stud_msg").value,
+					 "subj": "{{volunteer_sub}}",
+					 "day": "{{ volunteer_day}}",
+					 "from": "{{ volunteer_from }}",
+					 "to": "{{volunteer_to}}"
+					 }
+					 });
+
+
+
+
+					 }
+
+				</script>
+				<table id="chatbox">
+				</table>
+			</div>
+			<div class="row text-box" style = "height:10%;margin-left:0;margin-right:0;">
+				<div class="col-md-10" style=" padding:0;">
+				<input type="text" id="stud_msg" class="msg_input" style = "width:100%; height: 100%;background:none; padding:0;" placeholder="Type Message...">
+				</div>
+				<div class="col-md-2" style=" padding:0;">
+					<input type="button" class="msg_send" value="Send" onclick="Send_Message()" style="float:right;">
+				</div>
+			</div>
+
+		</div>
 	</div>
-	<div id = "chat-window" style = "border: 1px solid black;">
-		<div class="row" style = "height:10%;background-color:blue;margin-left:0;margin-right:0;">
-		<h2>{{ volunteer_email }}</h2>
-		
-		</div>
-		<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;background-color:lightblue;">
-		 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
-
-<script>
- var firebaseConfig = {
-  apiKey: "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
-  authDomain: "ctrldebthack.firebaseapp.com",
-  databaseURL: "https://ctrldebthack-default-rtdb.firebaseio.com",
-  projectId: "ctrldebthack",
-  storageBucket: "ctrldebthack.appspot.com",
-  messagingSenderId: "231552560212",
-  appId: "1:231552560212:web:aacb5f70bc1ecb342951c1"
-};
-     firebase.initializeApp(firebaseConfig);
-	 
-	var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
-	msg_added.limitToLast(1).on('child_added', function (data) {
-        
-		var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
-		ref_chat_id.once('value', function(snapshot1) {
-		
-		var idd = snapshot1.val().id;
-		var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd+'/');
-		
-		ref_msg.once('value',function(snapshot2){
-		var chatbox = document.getElementById("chatbox");
-		var row = chatbox.insertRow(-1);
-		row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
-		});
-		
-     })
-	 });
-	 
-	 function Previous_messages(){
-	 try {
-	 var chatbox = document.getElementById("chatbox");
-	 chatbox.innerHTML = "";
-	 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
-		ref_chat_id.once('value', function(snapshot1) {
-		var idd = snapshot1.val().id;
-		idd = parseInt(idd)-1;
-		while (idd > 0){
-
-		
-		console.log(idd);
-		var ref_msg = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/'+idd.toString()+'/');
-		ref_msg.once('value',function(snapshot2){
-		var chatbox = document.getElementById("chatbox");
-		var row = chatbox.insertRow(0);
-		row.innerHTML = Object.keys(snapshot2.val())[0] +":"+ snapshot2.val()[Object.keys(snapshot2.val())[0]];
-		});
-		idd = idd - 1;
-		}
-
-	 });
-	 }
-	 catch (err){
-	 console.log(err);
-	 }
-	}
-	 
-	 function Send_Message(){
-	 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
-	 ref_chat_id.once('value', function(snapshot) {
-	  if (snapshot.exists()) {
-		var idd = snapshot.val().id;
-		idd = (parseInt(idd)+1).toString();
-		ref_chat_id.set({'id': idd});
-		var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
-		ref.child(idd).set({'{{ student_email }}':document.getElementById("stud_msg").value});
-	  } else {
-		ref_chat_id.set({'id':'1'});
-		var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/1/');
-		ref.set({'{{ student_email }}': document.getElementById("stud_msg").value});
-	  }
-	  }
-	  );
-	  var rec_msg_ref = firebase.database().ref('Received_Messages/{{ volunteer_email }}/');
-	 rec_msg_ref.set({'{{ student_email }}' : {
-	 "msg":document.getElementById("stud_msg").value,
-	 "subj": "{{volunteer_sub}}",
-	 "day": "{{ volunteer_day}}",
-	 "from": "{{ volunteer_from }}",
-	 "to": "{{volunteer_to}}"	 
-	 }
-	 });
-	 
-	 
-
-	 
-	 }
-	 
-</script>
-<table id="chatbox">
-</table>
-		</div>
-		<div class="row" style = "height:10%;background-color:yellow;margin-left:0;margin-right:0;">
-		<div class="col-md-10" style=" padding:0;">
-		<input type="text" id="stud_msg" style = "width:100%; height: 100%; padding:0;">
-		</div>
-		<div class="col-md-2" style=" padding:0;">
-		<input type="button" value="Send msg" style = "width:100%; height: 100%;  padding:0;" onclick="Send_Message()">
-		</div>
-		</div>
-		
-	</div>
-</div>
+<div class="bg"></div>
 </body>
 </html>
