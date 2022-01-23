@@ -22,21 +22,31 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('admin/', admin.site.urls),
-    path('sdashboard/', sviews.match_stud_to_vol),
-    path('vdashboard/', vviews.match_vol_to_stud),
+    path('sdashboard/', sviews.sdashboard),
+    path('vdashboard/', vviews.vdashboard),
     path('stud_chat/<str:name>',sviews.stud_chat),
     path('vol_chat/<str:name>',vviews.vol_chat),
     path('received_messages_by_stud/<str:name>',sviews.messages),
     path('received_messages_by_vol/<str:name>',vviews.messages),
     path('confirm_stud_vol/', vviews.confirm_stud_vol),
+    path('accept_stud_vol/', sviews.accept_stud_vol),
     
+    path('get_study_material/',sviews.get_study_material),
     path("sinfo/", sviews.sinfo, name='sinfo'),
     path("signin/", sviews.sign_in, name="signin"),
     path("post_signin/", sviews.post_signin),
     path("signup/", sviews.sign_up,name="signup"),
     path("post_signup/", sviews.post_signup),
     path("logout/", sviews.logout),
-
+    
+    path("stud_dash_data/",sviews.stud_dash_data, name="stud_dash_data"),
+    path("stud_get_messages/",sviews.stud_get_messages, name="stud_get_messages"),
+    path("get_connected_vols/",sviews.get_connected_vols, name="get_connected_vols"),
+    
+    path("vol_dash_data/",vviews.vol_dash_data, name="vol_dash_data"),
+    path("vol_get_messages/",vviews.vol_get_messages, name="vol_get_messages"),
+    path("get_connected_stud/",vviews.get_connected_stud, name="get_connected_stud"),
+    
     path("vinfo/", vviews.vinfo, name='vinfo'),
     path("vsignin/", vviews.vsign_in, name='vsignin'),
     path("vpost_signin/", vviews.vpost_signin),

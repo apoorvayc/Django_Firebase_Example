@@ -18,13 +18,45 @@
 		</div>
 		<div id = "chat-window" style = "border: 1px solid black;">
 			<div class="row chat-title" style = "height:10%;margin-left:0;margin-right:0;">
-				<i class="far fa-user"></i><h2>{{ volunteer_email }}</h2>
+				<div class="col-md-4" style="border: 2px solid white; border-radius: 20%;">
+						<h2>Volunteer: </h2><br>
+						<h2>{{ volunteer_email }}</h2>
+				</div>
+				<div class="col-md-8 text-center" id="accept_alert">
+					<h2 id="alert_msg">Volunteer has confirmed to teach you, accept if you agree.</h2>
+					<input type="button" value="Accept" id="confirm" onclick="Confirm_Stud_Vol();" >
+				</div>
 
 			</div>
 			<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;">
 				<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
 				<script>
+				function Confirm_Stud_Vol(){
+		console.log("here");
+		document.getElementById("alert_msg").innerHTML = "Sending your confirmation to the volunteer";
+		document.getElementById("confirm").disabled = true;
+			$.ajax(
+			{
+				type:"GET",
+				url: "/accept_stud_vol/",
+				data:{
+						 volunteer_email: "{{volunteer_email}}",
+						 volunteer_sub: "{{volunteer_sub}}",
+						 volunteer_day : "{{volunteer_day}}",
+						 volunteer_from: "{{volunteer_from}}",
+						 volunteer_to: "{{volunteer_to}}"
+				},
+				success: function( data )
+				{
+					alert("You have accepted to learn from {{ volunteer_email }}");
+					document.getElementById("alert_msg").innerHTML = "You are connected with volunteer!";
+					document.getElementById("confirm").disabled = true;
+				}
+			 });
+		 };
+				
 				 var firebaseConfig = {
 				  apiKey: "AIzaSyCCYMDQ43IdFjxzkIdFPlwwyiSRiw0abSU",
 				  authDomain: "ctrldebthack.firebaseapp.com",
@@ -35,6 +67,11 @@
 				  appId: "1:231552560212:web:aacb5f70bc1ecb342951c1"
 				};
 					 firebase.initializeApp(firebaseConfig);
+					 
+					var confirmation = firebase.database().ref("Connected_stud_vol").child("{{student_email}}-{{volunteer_email}}-{{volunteer_sub}}-{{volunteer_day}}-{{volunteer_from}}-{{volunteer_to}}/");
+					confirmation.on('child_added', function (data) {
+						document.getElementById("accept_alert").style.display = "block";
+					});
 
 					var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
 					msg_added.limitToLast(1).on('child_added', function (data) {
@@ -55,6 +92,22 @@
 					 });
 
 					 function Previous_messages(){
+					 
+					 var ref_confirm_stud_vol = firebase.database().ref("Connected_stud_vol").child("{{student_email}}-{{volunteer_email}}-{{volunteer_sub}}-{{volunteer_day}}-{{volunteer_from}}-{{volunteer_to}}/");
+					 ref_confirm_stud_vol.once("value", function(snapshot){
+						if (snapshot.exists()){
+								if (snapshot.val().status == "confirmed") {
+								document.getElementById("accept_alert").style.display = "block";
+							}
+							else {
+								document.getElementById("alert_msg").innerHTML = "You are connected with volunteer";
+								document.getElementById("confirm").disabled = true;
+							}
+						}}
+						);
+
+
+
 					 try {
 					 var chatbox = document.getElementById("chatbox");
 					 chatbox.innerHTML = "";
@@ -107,6 +160,7 @@
 					 "to": "{{volunteer_to}}"
 					 }
 					 });
+					 document.getElementById("stud_msg").value = "";
 
 
 

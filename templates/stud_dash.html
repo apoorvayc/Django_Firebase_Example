@@ -40,12 +40,116 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
 
 </head>
-<body>
+<body onload="func();">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script >
+function func(){
+document.location.hash = "";
+		document.getElementById("gif").style.display = "block";
 
-	function get_study_material()
+}
+
+	function stud_dash_data()
 	{
+			document.getElementById("gif").style.display = "none";
+
+		$.ajax(
+		{
+			type:"GET",
+			url: "/stud_dash_data/",
+			data:{
+			},
+			success: function( stud_dash_data )
+			{	
+				console.log(stud_dash_data);
+				if (stud_dash_data.length == 0){
+				console.log("here 2");
+				document.getElementById("dashboard").innerHTML  = "<h2>You're not matched with any volunteer, add more availability preferences.</h2>"
+				}
+				else {
+				row = "<h2 class='header text-center'><span class='icon'></span>Welcome " + stud_dash_data[0][5] + "! Connect with the volunteers to start a chat. <br>Keep Learning! </h2><div class='row'>";
+				for(i=0;i<stud_dash_data.length;i++){
+					console.log(stud_dash_data[i][0]);
+					row += "<div class='col-md-4'><h style='color:#FF0000;'>Volunteer: </h><h>" +  stud_dash_data[i][0] + "</h><br><h  style='color:#FF0000;'>Subject: </h><h>" + stud_dash_data[i][1] + "</h><br><h  style='color:#FF0000;'>Day: </h><h>" + stud_dash_data[i][2] + "</h><br><h  style='color:#FF0000;'>From: </h><h>" + stud_dash_data[i][3] + "</h><br><h style='color:#FF0000;'>To: </h><h>" + stud_dash_data[i][4] + "</h><br><a href = '/stud_chat/"+stud_dash_data[i][0]+"@"+stud_dash_data[i][1]+"@"+stud_dash_data[i][2]+"@"+stud_dash_data[i][3]+"@"+stud_dash_data[i][4]+"'><input type='button' value='Connect Volunteer'></a>";
+					row += "</div>";
+				}
+				row += "</div>";
+				document.getElementById("dashboard").innerHTML = row;
+				}
+			}
+			
+			
+		 });
+	};
+	function get_connected_vols()
+	{
+			document.getElementById("gif").style.display = "none";
+
+		$.ajax(
+		{
+			type:"GET",
+			url: "/get_connected_vols/",
+			data:{
+			},
+			success: function( get_connected_vols )
+			{	
+				if (get_connected_vols.length == 0){
+				console.log("here 2");
+				document.getElementById("connected").innerHTML  = "<h2>You're not connected with any volunteer.</h2>"
+				}
+				else {				
+				var chatbox = document.getElementById("connected");
+				chatbox.innerHTML = "";
+				var row = "<h2 class='header'>Volunteer Connected Status</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);border: 1px solid black;';>Volunteer</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Subject</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Day</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>From</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>To</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Status</th></tr>";
+
+					for (key=0;key<get_connected_vols.length;key++) 
+					{		var status = "Connected";
+							if (get_connected_vols[key][6] == "confirmed"){
+							status = "Awaiting Acceptance";
+							}
+							row += "<tr><th style='border:1px solid black;'>" + get_connected_vols[key][0] + "</th><th style='border:1px solid black;'>" + get_connected_vols[key][2] + "</th><th style='border:1px solid black;'>" + get_connected_vols[key][3] + "</th><th style='border:1px solid black;'>" + get_connected_vols[key][4] + "</th><th style='border:1px solid black;'>" + get_connected_vols[key][5] + "</th><th style='border:1px solid black;'>" + status + "</th></tr>"; 
+						
+					}  
+				row += "</table>"
+				chatbox.innerHTML = row;
+			
+			}
+			}
+			
+		 });
+	};
+	function stud_get_messages()
+	{		document.getElementById("gif").style.display = "none";
+
+		$.ajax(
+		{
+			type:"GET",
+			url: "/stud_get_messages/",
+			data:{
+			},
+			success: function( received_messages_by_stud )
+			{	
+				if (received_messages_by_stud.length == 0){
+				console.log("here 2");
+				document.getElementById("msg").innerHTML  = "<h2>You have not received any messages.</h2>"
+				}
+				else {
+				var row = "<h2 class='header ' style=''>Received Messages</h2><div class='row'>";
+				for(i=0;i<received_messages_by_stud.length;i++){
+					console.log(received_messages_by_stud[i]);
+					row += "<div class='col-md-4'><h>Volunteer: " +  received_messages_by_stud[i][0] + "</h><br><h>Subject: " + received_messages_by_stud[i][1] + "</h><br><h>Day: " + received_messages_by_stud[i][2] + "</h><br><h>From: " + received_messages_by_stud[i][3] + "</h><br><h>To: " + received_messages_by_stud[i][4] + "</h><br><h>Message: " + received_messages_by_stud[i][5] + "</h><br><a href = '/stud_chat/"+received_messages_by_stud[i][0]+"@"+received_messages_by_stud[i][1]+"@"+received_messages_by_stud[i][2]+"@"+received_messages_by_stud[i][3]+"@"+received_messages_by_stud[i][4]+"'><input type='button' value='Connect Volunteer'></a>";
+					row += "</div>";
+				}
+				row += "</div>";
+				document.getElementById("msg").innerHTML = row;
+			}
+			}
+			
+		 });
+	};	
+	function get_study_material()
+	{		document.getElementById("gif").style.display = "none";
+
 		$.ajax(
 		{
 			type:"GET",
@@ -54,13 +158,21 @@
 			},
 			success: function( study_material )
 			{	
+			if (study_material.length == 0){
+				console.log("here 2");
+				document.getElementById("study").innerHTML  = "<h2>No study materials uploaded yet.</h2>"
+				}
+				else {
 			console.log(study_material);
-			var row = "<h2 class='header text-center' style='text-decoration:underline;'>Study Material</h2><div class='row' style='margin-left: 25px;color:#007bff'>";
 			var index = 0;
+			var row = "<h2 class='header text-center' style='text-decoration:underline;'>Study Material</h2>"
 					for (var key in study_material) 
 					{
-					   console.log(key);
-					   
+					
+					row += "<h2>Subject: " + key + "</h2><br>";
+					row += "<div class='row' style='margin-left: 25px;color:#007bff'>";
+					
+					
 					   for (var k in study_material[key]) 
 					   {
 							for(i=1;i<study_material[key][k].length;i++) 
@@ -71,11 +183,12 @@
 						   
 						
 						}
-						row += "</div><div class='row' style='margin-left: 25px;color:#007bff'>";
+						row += "</div>";
 				   }
-				   row += "</div>"
+				  
 					document.getElementById("study").innerHTML = row;
 
+			}
 			}
 			
 		 });
@@ -94,54 +207,44 @@
           <a href="/home/"></a>
         </div>
         <ul>
-          <li><a href="#dashboard" id="targeted">dashboard</a></li>
-          <li><a href="#msg">Messages</a></li>
-          <li><a href="#connected">Connected</a></li>
-          <li><a href="#study"><button onclick="get_study_material();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Study Material</button></a></li>
+          <li><a href="#dashboard" id="targeted"><button onclick="stud_dash_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Matched Volunteers</button></a></li>
+          <li><a href="#msg"><button onclick="stud_get_messages();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Received Messages</button></a></li>
+          <li><a href="#connected"><button onclick="get_connected_vols();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Connected Volunteers</button></a></li>
+          <li><a href="#study"><button onclick="get_study_material();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Study Material</button></a></li>
 
         </ul>
       </div>
       <div class="main">
 
-        <div class="mainContent clearfix">
-          <div id="dashboard">
+        <div class="mainContent clearfix" >
+          <div id="dashboard" style="width:90%;height: 80%; margin:100px 20px 0 20px; overflow:hidden;overflow-y:auto;">
 
 
             <h2 class="header text-center"><span class="icon"></span>Welcome {{ email }}! Connect with the volunteers to start a chat. <br>Keep Learning! </h2>
-
-
+			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
           </div>
-           <div id="msg">
-             <h2 class="header">See Received Messages ...</h2>
-               <div class="row" style="margin-left: 25px;">
-               <a href="/received_messages_by_stud/{{email}}"><input type="button" value="Received Messages"></a>
-               </div>
+           <div id="msg"style="width:90%;height: 80%; margin:100px 20px 0 20px; overflow:hidden;overflow-y:auto;">
+			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
            </div>
-           <div id="connected" style="width: 521px">
-             <h2 class="header">Connected To...</h2>
-               <div class="container">
-                    {% for match in match_list %}
-						<div class = "col-md-4" style=" padding:0;">
-							<div class="row"> <h4> Volunteer {{ match.0 }}</h4></div>
-                            <div class="row"><h4> Subject: {{ match.1 }}</h4></div>
-                            <div class="row"><h4> Day: {{ match.2 }}</h4></div>
-                            <div class="row"><h4> From:  {{ match.3 }}  To: {{ match.4}}</h4></div>
-                            <a href = "/stud_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Volunteer"></a>
-						</div>
-			        {% endfor %}
-                   </div>
+           <div id="connected" style="width:90%; padding-top:100px;margin:0 20px 0 20px;overflow:hidden;overflow-x:auto;">
+			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
+            
            </div>
-            <div id="study">
+            <div id="study" style="width:90%;height: 80%;margin:100px 20px 0 20px;overflow:hidden;overflow-y:auto;" >
              
-				
+							<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
+
 
            </div>
 
 
          </div>
      <ul class="statusbar">
-       <li class="logout"><a href="/logout/" >Logout</a></li>
+		<li class="logout"><a href="/logout/" >Logout</a></li>
+		<li class="logout"><a href="/sinfo/" style="width:120%;">Add Availability</a></li>
      </ul>
+	 		<img id="gif" class="img" src="/static/images/9zrk.gif" style="padding-left: 100px;width: 80%;padding-top: 60px;">
+
    </div>
 </div>
 

@@ -38,11 +38,9 @@
                             <div class="col-sm-1"></div>
                             <div id="appt"
                                  style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;"><br>
-                                <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
-                                        onchange="document.getElementById('dayValue').value=this.options[this.selectedIndex].text; document.getElementById('dayValue').value=this.options[this.selectedIndex].value;"
-                                        required>
+                                <select name="dayValue" style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;" required>
 
-                                    <option></option>
+                                    <option selected disabled value="">Select Day</option>
                                     <option type="submit" name="mon">Monday</option>
                                     <option type="submit" name="tue">Tuesday</option>
                                     <option type="submit" name="wed">Wednesday</option>
@@ -51,10 +49,7 @@
                                     <option type="submit" name="sat">Saturday</option>
                                 </select>
 
-                                <input type="text" name="dayValue" id="dayValue"
-                                       placeholder="add/select a value" onfocus="this.select()"
-                                       style="position:absolute;top:0px;left:0px;width:183px;width:180px\9;#width:180px;height:23px; height:21px\9;#height:18px;border:1px solid #556;">
-                                <input type="hidden">
+
                             </div>
                             <br><br>
                         </div>

@@ -9,33 +9,119 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
 
 </head>
-<body>
+<body onload="func();">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script >
+
+	function vol_dash_data()
+	{
+		document.getElementById("gif").style.display = "none";
+		$.ajax(
+		{
+			type:"GET",
+			url: "/vol_dash_data/",
+			data:{
+			},
+			success: function( vol_dash_data )
+			{	
+				if (vol_dash_data.length == 0){
+				console.log("here 2");
+				document.getElementById("dashboard").innerHTML  = "<h2>You're not matched with any student, add more availability preferences.</h2>"
+				}
+				else {				
+				row = "<h2 class='header text-center'><span class='icon'></span>Welcome " + vol_dash_data[0][5] + "! Connect with the students to start a chat. <br>Keep Mentoring! </h2><div class='row'>";
+				for(i=0;i<vol_dash_data.length;i++){
+					console.log(vol_dash_data[i][0]);
+					row += "<div class='col-md-4' style='margin-bottom:20px;'><h style='color:#FF0000;'>Student: </h><h>" +  vol_dash_data[i][0] + "</h><br><h style='color:#FF0000;'>Subject: </h><h>" + vol_dash_data[i][1] + "</h><br><h style='color:#FF0000;'>Day: </h><h>" + vol_dash_data[i][2] + "</h><br><h style='color:#FF0000;'>From: </h><h>" + vol_dash_data[i][3] + "</h><br><h style='color:#FF0000;'>To: </h><h>" + vol_dash_data[i][4] + "</h><br><a href = '/vol_chat/"+vol_dash_data[i][0]+"@"+vol_dash_data[i][1]+"@"+vol_dash_data[i][2]+"@"+vol_dash_data[i][3]+"@"+vol_dash_data[i][4]+"'><input type='button' value='Connect Student'></a>";
+					row += "</div>";
+				}
+				row += "</div>";
+				document.getElementById("dashboard").innerHTML = row;
+			
+			}
+			}
+			
+		 });
+	};
+		function get_connected_stud()
+	{
+	document.getElementById("gif").style.display = "none";
+		$.ajax(
+		{
+			type:"GET",
+			url: "/get_connected_stud/",
+			data:{
+			},
+			success: function( get_connected_stud )
+			{	
+				if (get_connected_stud.length == 0){
+				console.log("here 2");
+				document.getElementById("connected").innerHTML  = "<h2>You're not connected with any student.</h2>"
+				}
+				else {				
+				var chatbox = document.getElementById("connected");
+				chatbox.innerHTML = "";
+				var row = "<h2 class='header'>Student Connected Status</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);border: 1px solid black;';>Student</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Subject</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Day</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>From</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>To</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Status</th></tr>";
+
+					for (key=0;key<get_connected_stud.length;key++) 
+					{		var status = "Connected";
+							if (get_connected_stud[key][6] == "confirmed"){
+							status = "Awaiting Acceptance";
+							}
+							row += "<tr><th style='border:1px solid black;'>" + get_connected_stud[key][0] + "</th><th style='border:1px solid black;'>" + get_connected_stud[key][2] + "</th><th style='border:1px solid black;'>" + get_connected_stud[key][3] + "</th><th style='border:1px solid black;'>" + get_connected_stud[key][4] + "</th><th style='border:1px solid black;'>" + get_connected_stud[key][5] + "</th><th style='border:1px solid black;'>" + status + "</th></tr>"; 
+						
+					}  
+				row += "</table>"
+				chatbox.innerHTML = row;
+			
+			}
+			}
+			
+		 });
+	};
+		function vol_received_messages()
+	{
+	document.getElementById("gif").style.display = "none";
+		$.ajax(
+		{
+			type:"GET",
+			url: "/vol_get_messages/",
+			data:{
+			},
+			success: function( received_messages_by_vol )
+			{	
+				if (received_messages_by_vol.length == 0){
+				console.log("here 2");
+				document.getElementById("msg").innerHTML  = "<h2>You have not received any messages.</h2>"
+				}
+				else {
+				row = "<div class='row'>";
+				for(i=0;i<received_messages_by_vol.length;i++){
+					console.log(received_messages_by_vol[i]);
+					row += "<div class='col-md-4'><h>Student: " +  received_messages_by_vol[i][0] + "</h><br><h>Subject: " + received_messages_by_vol[i][1] + "</h><br><h>Day: " + received_messages_by_vol[i][2] + "</h><br><h>From: " + received_messages_by_vol[i][3] + "</h><br><h>To: " + received_messages_by_vol[i][4] + "</h><br><h>Message: " + received_messages_by_vol[i][5] + "</h><br><a href = '/vol_chat/"+received_messages_by_vol[0][0]+"@"+received_messages_by_vol[0][1]+"@"+received_messages_by_vol[0][2]+"@"+received_messages_by_vol[0][3]+"@"+received_messages_by_vol[0][4]+"'><input type='button' value='Connect Student'></a>";
+					row += "</div>";
+				}
+				row += "</div>";
+				document.getElementById("msg").innerHTML = row;
+			
+			}
+			}
+		 });
+	};	
+	
+	
+function func(){
+document.location.hash = "";
+document.getElementById("gif").style.display = "block";
+}
+
+
+
+
+
+
+</script>
 	<div class = "container">
-<!--		<div class="row">-->
-<!--			<a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>-->
-<!--		</div>-->
-<!--		<div class="row">-->
-<!--			<h1>Welcome {{ email }}! Connect with the students to start a chat. Keep Learning! </h1>-->
-<!--		</div>-->
-<!--		<div class = "row">-->
-
-<!--			{% for match in match_list %}-->
-<!--						<div class = "col-md-4" style=" padding:0;">-->
-<!--							<h> Student {{ match.0 }}</h><br>-->
-<!--							<h> Subject {{ match.1 }}</h><br>-->
-<!--							<h> Day {{ match.2 }}</h><br>-->
-<!--							<h> From {{ match.3 }} To {{ match.4}} </h><br>-->
-<!--							<a href = "/vol_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>-->
-
-
-<!--						</div>-->
-<!--			{% endfor %}-->
-
-
-<!--		</div>-->
-<!--	</div>-->
-
-
 	<div class="admin-panel clearfix">
       <div class="slidebar">
         <div class="logo">
@@ -44,50 +130,46 @@
     max-width:70%;">
         </div>
         <ul>
-          <li><a href="#dashboard" id="targeted">dashboard</a></li>
-          <li><a href="#msg">Messages</a></li>
-          <li><a href="#connected">Connected</a></li>
-
+          <li><a href="#dashboard" id="targeted"><button onclick="vol_dash_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Matched Students</button></a></li>
+          <li><a href="#msg"><button onclick="vol_received_messages();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Received Messages</button></a></li>
+          <li><a href="#connected"><button onclick="get_connected_stud();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Connected Students</button></a></li>
+		  
 
         </ul>
       </div>
       <div class="main">
 
         <div class="mainContent clearfix">
-          <div id="dashboard">
+          <div id="dashboard" style="width:90%;height: 80%; margin:100px 20px 0 20px; overflow:hidden;overflow-y:auto;">
 
 
             <h2 class="header text-center"><span class="icon"></span>Welcome {{ email }}! Connect with the students to start a chat. <br>Keep Mentoring! </h2>
-
+			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
 
           </div>
-           <div id="msg">
-             <h2 class="header">See Received Messages ...</h2>
+           <div id="msg" style="width:90%;height: 80%; margin:100px 20px 0 20px; overflow:hidden;overflow-y:auto;">
                <div class="row" style="margin-left: 25px;">
-               <a href="/received_messages_by_vol/{{email}}"><input type="button" value="Received Messages"></a>
+			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
+
                </div>
            </div>
-           <div id="connected" style="width: 521px">
-             <h2 class="header">Connected To...</h2>
-               <div class="container">
-                    {% for match in match_list %}
-						<div class = "col-md-4" style=" padding:0;">
-							<div class="row"> <h4> Student: {{ match.0 }}</h4></div>
-                            <div class="row"><h4> Subject: {{ match.1 }}</h4></div>
-                            <div class="row"><h4> Day: {{ match.2 }}</h4></div>
-                            <div class="row"><h4> From:  {{ match.3 }}  To: {{ match.4}}</h4></div>
-                            <a href = "/vol_chat/{{match.0}}@{{match.1}}@{{match.2}}@{{match.3}}@{{match.4}}" ><input type="button" value="Connect Student"></a>
-						</div>
-			        {% endfor %}
-                   </div>
+           <div id="connected"style="width:90%; padding-top:100px;margin:0 20px 0 20px;overflow:hidden;overflow-x:auto;" >
+
+			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
+
            </div>
 
 
          </div>
      <ul class="statusbar">
        <li class="logout"><a href="/vlogout/" >Logout</a></li>
+	<li class="logout"><a href="/vinfo/" style="width:120%;">Add Availability</a></li>
+
      </ul>
-   </div>
+		<img id="gif" class="img" src="/static/images/9zrk.gif" style="padding-left: 100px;width: 80%;padding-top: 60px;">
+	 </div>
+
+
 </div>
 
 

@@ -92,17 +92,28 @@ def ad_logout(request):
 def stud_data(request):
     name =database.child("Student_Registration").get().val()
     x=[]
-    for key, value in name.items():
-        x.append(value['name'])
-        print(value['name'])
 
-    return HttpResponse(json.dumps(x), content_type='application/json')
+    return HttpResponse(json.dumps(name), content_type='application/json')
 
 def vol_data(request):
     name =database.child("Volunteer_Registration").get().val()
-    x=[]
-    for key, value in name.items():
-        x.append(value['name'])
-        print(value['name'])
+    return HttpResponse(json.dumps(name), content_type='application/json')
 
-    return HttpResponse(json.dumps(x), content_type='application/json')
+def add_study_material(request) :
+    if request.method == "POST" :
+        url = request.POST["url"]
+        url = url.replace("watch?v=","embed/")
+        print(url)
+        subject = request.POST['displayValue']
+        database.child("Study_Material").child(subject).push({1:url})
+    return render(request,"ad_dashboard.html")
+    
+def get_dash_data(request) :
+    pairs = database.child("Connected_stud_vol").get().val()
+    row = []
+    for i in pairs :
+        row.append([i.split("-")])
+    return HttpResponse(json.dumps(row), content_type='application/json')
+
+    
+    

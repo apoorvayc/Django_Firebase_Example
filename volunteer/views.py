@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from intervaltree import Interval, IntervalTree
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-
+import json
 
 # Create your views here.
 config = {
@@ -31,7 +31,7 @@ def vsign_in(request):
     if request.session['uid'] != None:
         currentuserrid = request.session['email']
         print("Email ", currentuserrid)
-        return match_vol_to_stud(request)
+        return render(request,"vol_dash.html")
     return render(request, "vsignin.html")
 
 def vpost_signin(request):
@@ -45,21 +45,21 @@ def vpost_signin(request):
             return HttpResponse("you are not signed in")
         request.session['email'] = request.POST.get('email')
         email = request.POST.get('email')
-        ename = email.split("@")[0]
+        ename = email.split("@")[0].replace(".",",")
         password = request.POST.get('password')
         try:
             user = authe.sign_in_with_email_and_password(email, password)
             session_id = user['idToken']
             request.session['uid'] = session_id
             request.session['email'] = email
-            return match_vol_to_stud(request)
+            return render(request,"vol_dash.html")
 
         except:
             message = "Invalid Credentials!!"
             return render(request, "vsignin.html", {"msg": message})
 
     else:
-        return match_vol_to_stud(request)
+        return render(request,"vol_dash.html")
 
 
 def vsign_up(request):
@@ -72,7 +72,7 @@ def vinfo(request):
 
         name = request.POST.get('name')
         email = request.POST.get('email')
-        sname = email.split("@")[0]
+        sname = email.split("@")[0].replace(".",",")
         password = request.POST.get('password')
         # grade
         grade = request.POST.get('displayValue')
@@ -87,6 +87,8 @@ def vinfo(request):
             message = "Unable to create Account. Try Again!!"
             return render(request, "vsignup.html", {"msg": message})
         request.session["email"] = email
+        session_id = user['idToken']
+        request.session['uid'] = session_id
         database.child("Volunteer_Registration").child(sname).set({"name": name, "grade": grade})
         database.child("Volunteer_Subject_Preference").child(sname).set({"subject": subject})
 
@@ -97,7 +99,7 @@ def vpost_signup(request):
     if request.method == "POST":
 
         email = request.session["email"]
-        sname = email.split("@")[0]
+        sname = email.split("@")[0].replace(".",",")
 
         # availability
         dayvalue = request.POST.get('dayValue')
@@ -128,9 +130,11 @@ def vol_chat(request,name):
     student_day = name[2]
     student_from = name[3]
     student_to = name[4]     
-    volunteer_email = request.session['email'].split("@")[0]
+    volunteer_email = request.session['email'].split("@")[0].replace(".",",")
     return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"student_sub":student_sub,"student_day":student_day,"student_from":student_from,"student_to":student_to})
     
+def vdashboard(request) :
+    return render(request,"vol_dash.html")
     
 def get_subject_wise_students(day,vol_category,subject) :
     student_obj = []
@@ -145,9 +149,9 @@ def get_day_wise_student_pref(stud_email,day) :
 def get_time_in_minutes(time) :
     return int(time.split(":")[0])*60+int(time.split(":")[1])
      
-def match_vol_to_stud(request) :
+def vol_dash_data(request) :
     match_list = []
-    vol_email = request.session['email'].split("@")[0]
+    vol_email = request.session['email'].split("@")[0].replace(".",",")
     vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
     vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
     vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
@@ -191,14 +195,14 @@ def match_vol_to_stud(request) :
                                 end_hr = str(end//60).zfill(2)
                                 end_min = str(end%60).zfill(2)
 
-                                match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min)
+                                match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min) + "@" + vol_email
                                 
                                 match_list.append(match_str.split("@"))
                                 #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
                         except :
                             continue
    
-    return render(request,"vol_dash.html",{"email":vol_email,"match_list":match_list})
+    return HttpResponse(json.dumps(match_list), content_type='application/json')
  
 def messages(request,name) :
     current_email = name
@@ -215,8 +219,8 @@ def confirm_stud_vol(request) :
     student_day = request.GET["student_day"]
     student_from = request.GET["student_from"]
     student_to = request.GET["student_to"]
-    volunteer_email = request.session['email'].split("@")[0]
-
+    volunteer_email = request.session['email'].split("@")[0].replace(".",",")
+    """
     #update volunteer preferences
     time = database.child("Volunteer_Availability").child(volunteer_email).child(student_day).get().val()
     for t in time :
@@ -278,8 +282,11 @@ def confirm_stud_vol(request) :
                         pass
             except :
                     pass
-    database.child("Connected_stud_vol").child(student_email + "-" + volunteer_email + "-" + student_sub + "-" + student_day + "-" + student_from + "-" + student_to).set({"connected":"1"})
-    mail_subj = "You're connected with Volunteer: "+volunteer_email
+    
+    
+    """
+    database.child("Connected_stud_vol").child(student_email + "-" + volunteer_email + "-" + student_sub + "-" + student_day + "-" + student_from + "-" + student_to).set({"status":"confirmed"})
+    mail_subj = "Volunteer: "+volunteer_email+" has confirmed to teach you"
 
     merge_data = {
         "student_sub":student_sub,
@@ -301,4 +308,25 @@ def confirm_stud_vol(request) :
     
     
     return HttpResponse("Done")
+
+def vol_get_messages(request) :
+    volunteer_email = request.session["email"].split("@")[0].replace(".",",")
+    rec_msgs = database.child("Received_Messages").child(volunteer_email).get().val()
+    rec_msgs_list = []
+    try :
+        for i in rec_msgs :
+            rec_msgs_list.append([i, rec_msgs[i]["subj"], rec_msgs[i]["day"], rec_msgs[i]["from"], rec_msgs[i]["to"], rec_msgs[i]["msg"]])
+    except :
+        pass
+    return HttpResponse(json.dumps(rec_msgs_list), content_type='application/json')
     
+def get_connected_stud(request) :
+    volunteer_email = request.session["email"].split("@")[0].replace(".",",")
+    pairs = database.child("Connected_stud_vol").get().val()
+    row = []
+    for i in pairs :
+        if (i.split("-")[1] == volunteer_email) :
+            l = i.split("-")
+            l.append(pairs[i]["status"])
+            row.append(l)
+    return HttpResponse(json.dumps(row), content_type='application/json') 

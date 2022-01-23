@@ -1,15 +1,4 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Admin Dashboard</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--        add 3 buttons-->
-<!--see students-->
-<!--see volunteers-->
-<!--</body>-->
-<!--</html>-->
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,15 +11,51 @@
     <link href="{% static 'css/vol_dash.css' %}" rel="stylesheet"/>
 
 </head>
-<body>
-    <style>
-        #get_stud_data{
-	
-		}
-    </style>
+<body onload="func();">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script >
+	
+function func(){
+document.location.hash = "";
+}
 
+	function get_dash_data(){
+	
+		$.ajax(
+		{
+			type:"GET",
+			url: "/get_dash_data/",
+			data:{
+			},
+			success: function( pairs )
+			{	
+			
+			
+				
+				
+						var chatbox = document.getElementById("dashboard");
+						chatbox.innerHTML = "";
+						var row = "<h2 class='header'>Connected Student Volunteer Pairs</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);border: 1px solid black;';>Student</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Volunteer</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Subject</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Day</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>From</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>To</th></tr>";
+
+						
+						for (i=0;i<pairs.length;i++){
+							row += "<div class='row'>";
+							for(j=0;j<pairs[i].length;j++){
+							console.log(pairs[i][j][0]);
+							row += "<tr><th style='border:1px solid black;'>" +  pairs[i][j][0] + "</th><th style='border:1px solid black;'>" +  pairs[i][j][1] + "</th><th style='border:1px solid black;'>" +  pairs[i][j][2] + "</th><th style='border:1px solid black;'>" +  pairs[i][j][3] + "</th><th style='border:1px solid black;'>" +  pairs[i][j][4] + "</th><th style='border:1px solid black;'>" +  pairs[i][j][5] + "</th></tr>";
+							
+						}
+						
+					
+					}
+					row += "</table>"; 
+					chatbox.innerHTML = row;
+                   
+			}
+			
+		 });
+	};
 	function get_stud_data()
 	{
 		$.ajax(
@@ -41,11 +66,19 @@
 			},
 			success: function( stud_name )
 			{	
-					document.getElementById("student_row").innerHTML = "";
-					for(i=0;i<stud_name.length;i++)
+				var chatbox = document.getElementById("stud");
+				chatbox.innerHTML = "";
+				var row = "<h2 class='header'>Names of Students</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);width:50%;border: 1px solid black;';>Name</th><th  style='color:rgb(234,83,63);width:50%;border: 1px solid black;'>Grade</th></tr>";
+
+					for (var key in stud_name) 
 					{
-						document.getElementById("student_row").innerHTML +=  stud_name[i] + '<br>' 
-					}                    
+						
+							row += "<tr><th style='border:1px solid black;'>" + stud_name[key]["name"] + "</th><th style='border:1px solid black;'>" + stud_name[key]["grade"] + "</th></tr>"; 
+						
+					}  
+				row += "</table>"
+				chatbox.innerHTML = row;
+				
 			}
 			
 		 });
@@ -58,13 +91,21 @@
 			url: "/vol_data/",
 			data:{
 			},
-			success: function( vol_name )
+			success: function( stud_name )
 			{	
-					document.getElementById("volunteer_row").innerHTML = "";
-					for(i=0;i<vol_name.length;i++)
+				var chatbox = document.getElementById("vol");
+				chatbox.innerHTML = "";
+				var row = "<h2 class='header'>Names of Volunteers</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);width:50%;border: 1px solid black;';>Name</th><th  style='color:rgb(234,83,63);width:50%;border: 1px solid black;'>Category</th></tr>";
+
+					for (var key in stud_name) 
 					{
-						document.getElementById("volunteer_row").innerHTML +=  vol_name[i] + '<br>' 
-					}                    
+						
+							row += "<tr><th style='border:1px solid black;'>" + stud_name[key]["name"] + "</th><th style='border:1px solid black;'>" + stud_name[key]["grade"] + "</th></tr>"; 
+						
+					}  
+				row += "</table>"
+				chatbox.innerHTML = row;
+				                    
 			}
 			
 		 });
@@ -77,14 +118,17 @@
 
 	<div class="admin-panel clearfix">
       <div class="slidebar">
-        <div class="logo">
+               <div class="logo">
+            <img class="img-fluid text-center" src="/static/images/vlogo.png" style="margin-left:auto;
+    border-radius:50%;
+    max-width:70%;">
           <a href="/home/"></a>
         </div>
         <ul>
-          <li><a href="#dashboard" id="targeted"><button onclick="get_dash_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Dashboard</button></a></li>
-            <li><a href="#stud"><button onclick="get_stud_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Students</button></a></li>
-          <li><a href="#vol"><button onclick="get_vol_data();" style="background: transparent;color: rgb(140,140,140);border: 0px;">Volunteers</button></a></li>
-	      <li><a href="#add"><button style="background: transparent;color: rgb(140,140,140);border: 0px;">Add Study Material</button></a></li>
+          <li><a href="#dashboard" id="targeted"><button onclick="get_dash_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Connected Users</button></a></li>
+            <li><a href="#stud"><button onclick="get_stud_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Students</button></a></li>
+          <li><a href="#vol"><button onclick="get_vol_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Volunteers</button></a></li>
+	      <li><a href="#add"><button style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Add Study Material</button></a></li>
 	
 
         </ul>
@@ -95,14 +139,13 @@
           <div id="dashboard">
 
 
-            <h2 class="header text-center"><span class="icon"></span>Welcome {{ email }}!  </h2>
 
 
           </div>
            <div id="stud">
-             <h2 class="header">Names of Students</h2>
+            
                <div class="row"  style="margin-left: 25px;">
-                    <h id="student_row"></h>
+                    
                </div>
            </div>
 
@@ -113,19 +156,19 @@
                </div>
            </div>
             <div id="add">
-             <h2 class="header">Add Study Material (please enter Youtube Url/Drive Link for your video)</h2>
+             <h2 class="header">Add Study Material (please enter Youtube Url)</h2>
                <div class="row" style="margin-left: 25px;">
 						<form method="POST" action="/add_study_material/">
 						{% csrf_token %}
 							<select name="displayValue" required>
-								<option>Choose Subject</option>
+								<option disabled selected value="">Choose Subject</option>
 								<option type="submit" value="English">English</option>
 								<option type="submit" value="Maths">Maths</option>
 								<option type="submit" value="Science">Science</option>
 							</select>
 				
-							<input type="text" name="url">
-				  <input type="submit">
+							<input type="text" placeholder="Enter Url" name="url">
+				  <input type="submit"onclick="alert('Submitted Video');">
 				  </form>
                </div>
            </div>
@@ -136,11 +179,11 @@
 
                    </div>
            </div>
-
-
+		
+			
          </div>
      <ul class="statusbar">
-       <li class="logout"><a href="/ad_logout/" style="color:blue">Logout</a></li>
+       <li class="logout"><a href="/adlogout/" style="color:blue">Logout</a></li>
      </ul>
    </div>
 </div>

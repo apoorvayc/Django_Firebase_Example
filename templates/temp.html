@@ -4,10 +4,10 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
 </head>
 <body>
-<h> You are connected with {{volunteer_email }}</h><br>
+<h> Volunteer {{volunteer_email }} has confirmed to teach you, waiting for your acceptance.</h><br>
 <h> Subject: {{student_sub}} </h>><br>
 <h> Day: {{student_day }}</h>><br>
 <h> Time: {{student_from}} to {{student_to}} </h>><br>
-<h> Click here to chat with volunteer <a href="http://127.0.0.1:8000/stud_chat/{{volunteer_email}}@{{student_sub}}@{{student_day}}@{{student_from}}@{{student_to}}">Chat with volunteer</a></h>
+<h> Click here to chat with volunteer <a href="http://127.0.0.1:8000/stud_chat/{{volunteer_email}}@{{student_sub}}@{{student_day}}@{{student_from}}@{{student_to}}">Accept volunteer</a></h>
 </body>
 </html>

@@ -48,19 +48,14 @@
             <div class="container">
                 <div><h3>Grade</h3></div>
                 <div style="position:relative;width:200px;height:25px;border:0;padding:0;margin:0;"><br>
-                    <select style="position:absolute;top:0px;left:0px;width:200px; height:25px;line-height:20px;margin:0;padding:0;"
-                            onchange="document.getElementById('displayValue').value=this.options[this.selectedIndex].value; document.getElementById('idValue').value=this.options[this.selectedIndex].value;" required>
-                        <option value="">Choose preference for role</option>
+                    <select name="displayValue" style="position:absolute;top:0px;left:0px;width:350px; height:25px;line-height:20px;margin:0;padding:0;" required>
+                        <option selected disabled value="">Choose preference for role</option>
                         <option value="5-7">Academic Support Volunteer(5th-7th)</option>
                         <option value="8-10">Academic Support Volunteer(8th-10th)</option>
-                        <option value="11-12">Wingman(11th,12th)</option>
+                        <option value="11-12">Academic Support Volunteer(11th,12th)</option>
 
                     </select>
-                    <input type="text" name="displayValue" id="displayValue"
-                           placeholder="add/select a value" onfocus="this.select()"
-                           style="position:absolute;top:0px;left:0px;width:183px;width:180px\9;#width:180px;height:23px; height:21px\9;#height:18px;border:1px solid #556;">
-                    <input name="idValue" id="idValue" type="hidden">
-
+                   
 
                 </div>
             </div>

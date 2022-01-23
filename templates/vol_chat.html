@@ -14,6 +14,8 @@
 
 		function Confirm_Stud_Vol(){
 		console.log("here");
+		document.getElementById("alert_msg").innerHTML = "Sending your confirmation to the student";
+		document.getElementById("confirm").disabled = true;
 			$.ajax(
 			{
 				type:"GET",
@@ -27,8 +29,8 @@
 				},
 				success: function( data )
 				{
-					alert("You are connected with {{ student_email }}");
-					document.getElementById("alert_msg").innerHTML = "You are now connected";
+					alert("You have confirmed to teach {{ student_email }}");
+					document.getElementById("alert_msg").innerHTML = "Waiting for student acceptance!";
 					document.getElementById("confirm").disabled = true;
 				}
 			 });
@@ -45,6 +47,14 @@
 	  appId: "1:231552560212:web:aacb5f70bc1ecb342951c1"
 		};
 		 firebase.initializeApp(firebaseConfig);
+	 
+					var confirmation = firebase.database().ref("Connected_stud_vol").child("{{student_email}}-{{volunteer_email}}-{{student_sub}}-{{student_day}}-{{student_from}}-{{student_to}}/");
+					confirmation.on('child_changed', function (data) {
+						console.log("here 3456");
+						document.getElementById("alert_msg").innerHTML = "You are connected with student";
+					document.getElementById("confirm").disabled = true;
+					document.getElementById("gmeet").style.display = "block";
+					});
 
 		var msg_added = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
 		msg_added.limitToLast(1).on('child_added', function (data) {
@@ -64,15 +74,24 @@
 
 		 })
 		 });
+		 function Openmeet(){
+		 window.open( 'https://meet.google.com/', '_blank' );}
 		 function Previous_messages(){
 
 		 var ref_confirm_stud_vol = firebase.database().ref("Connected_stud_vol").child("{{student_email}}-{{volunteer_email}}-{{student_sub}}-{{student_day}}-{{student_from}}-{{student_to}}/");
 		 ref_confirm_stud_vol.once("value", function(snapshot){
 			if (snapshot.exists()){
-					document.getElementById("alert_msg").innerHTML = "You are now connected";
+					if (snapshot.val().status == "confirmed") {
+					document.getElementById("alert_msg").innerHTML = "Waiting for student acceptance";
 					document.getElementById("confirm").disabled = true;
-			}
-			}
+				}
+				else {
+				document.getElementById("alert_msg").innerHTML = "You are connected with student";
+					document.getElementById("confirm").disabled = true;
+					document.getElementById("gmeet").style.display = "block";
+					console.log("here 1234");
+				}
+			}}
 			);
 
 
@@ -106,6 +125,7 @@
 
 
 		 function Send_Message(){
+		 
 		 var ref_chat_id = firebase.database().ref('Latest_Chat_Id/{{ student_email }}-{{ volunteer_email }}/');
 		 ref_chat_id.once('value', function(snapshot) {
 		  if (snapshot.exists()) {
@@ -130,8 +150,7 @@
 		 "to": "{{student_to}}"
 		 }
 		 });
-
-		 }
+}
 
 
 		 window.onpaint = Previous_messages();
@@ -155,12 +174,15 @@
 		</div>
 		<div id = "chat-window" style = "border: 1px solid black;">
 			<div class="row chat-title" style = "height:12%;margin-left:0;margin-right:0;">
-				<div class="col-md-4">
+				<div class="col-md-4" style="border: 2px solid white; border-radius: 20%;">
+						<h2>Student: </h2><br>
 						<h2>{{ student_email }}</h2>
 				</div>
 				<div class="col-md-8 text-center">
-					<p id="alert_msg"> After your conversation, if you have confirmed to teach this student, please select the button given below. </p>
+					<h2 id="alert_msg">If you have confirmed to teach the student, select below button.</h2>
 					<input type="button" value="Confirm" id="confirm" onclick="Confirm_Stud_Vol();" >
+					<input type="button" value="Go to Google Meet"style="    margin-left: auto;    margin-right: auto;" id="gmeet" onclick="Openmeet();" >
+				
 				</div>
 			</div>
 			<div class="row" style ="display:table;width:100%;margin-left:0;margin-right:0;">
