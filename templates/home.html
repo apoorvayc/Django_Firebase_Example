@@ -57,12 +57,14 @@
 
         <div class="row">
           <div class="col-xl-5 col-lg-6 d-flex justify-content-center align-items-stretch" data-aos="fade-right">
-             <img src="{% static 'images/about.jpg' %}" class="img-fluid" alt="">
+             <img src="{% static 'images/homepage.jpg' %}" style="margin:100px 100px 0px 0px;height:400px;width:auto; " alt="">
+			 <a href="https://lbb.in/pune/ngos-and-volunteer-organisations-in-pune/" style="    position: absolute;  top: 500px; left: -100px;
+			 ">Reference</a>
           </div>
 
           <div class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5"
           data-aos="fade-left">
-            <h3>Shramdaan</h3>
+            <h3>Gyandaan</h3>
             <p>Voluntary contribution of knowledge</p>
             <div class="icon-box" data-aos="zoom-in" data-aos-delay="100">
               <div class="icon"><i class="fas fa-file-invoice-dollar"></i></div>
@@ -97,32 +99,28 @@
                   Sign In As...</h3>
             </div>
             <div class="row text-center">
-                <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
+                <div class="col-md-6">
+                    <a href="{% url 'signin' %}" style="color: inherit">
+					<span class="fa-stack fa-4x">
                       <i class="fas fa-circle fa-stack-2x text-danger"></i>
                       <i class="fas fa-user-graduate fa-stack-1x fa-inverse"></i>
 
                     </span>
-                    <h4 class="my-3"><a href="{% url 'signin' %}" style="color: inherit">Student</a></h4>
+                    <h4 class="my-3">Student</h4>
                     <p class="text-muted">Enroll Yourself</p>
+					</a>
                 </div>
-                <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
+                <div class="col-md-6">
+                    <a href="{% url 'vsignin' %}" style="color: inherit">
+					<span class="fa-stack fa-4x">
                       <i class="fas fa-circle fa-stack-2x text-warning"></i>
                       <i class="fas fa-hands-helping fa-stack-1x fa-inverse"></i>
                       </span>
-                    <h4 class="my-3"><a href="{% url 'vsignin' %}" style="color: inherit">Volunteer</a></h4>
+                    <h4 class="my-3">Volunteer</h4>
                     <p class="text-muted">Provide a helping hand</p>
+					</a>
                 </div>
-                <div class="col-md-4">
-                    <span class="fa-stack fa-4x">
-                      <i class="fas fa-circle fa-stack-2x text-success"></i>
-                      <i class="fas fa-tshirt fa-stack-1x fa-inverse"></i>
-                    </span>
-
-                    <h4 class="my-3"><a href="{% url 'ad_signin' %}" style="color: inherit">Admin</a></h4>
-                    <p class="text-muted">  </p>
-                </div>
+                
             </div>
         </div>
     </section>

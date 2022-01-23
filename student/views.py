@@ -372,7 +372,7 @@ def accept_stud_vol(request):
         subject=mail_subj,
         body="",
         from_email="rutuom.12@gmail.com",
-        to=["apoorvayc@gmail.com"]
+        to=[volunteer_email]
     )
     message.attach_alternative(html_body, "text/html")
     message.send(fail_silently=False)

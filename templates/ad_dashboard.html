@@ -18,10 +18,13 @@
 	
 function func(){
 document.location.hash = "";
+		document.getElementById("gif").style.display = "block";
+
 }
 
 	function get_dash_data(){
-	
+			document.getElementById("gif").style.display = "none";
+
 		$.ajax(
 		{
 			type:"GET",
@@ -36,7 +39,7 @@ document.location.hash = "";
 				
 						var chatbox = document.getElementById("dashboard");
 						chatbox.innerHTML = "";
-						var row = "<h2 class='header'>Connected Student Volunteer Pairs</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);border: 1px solid black;';>Student</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Volunteer</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Subject</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Day</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>From</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>To</th></tr>";
+						var row = "<h2 class='header'>Connected Student Volunteer Pairs</h2><table style='width:100%;margin-left:10px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);border: 1px solid black;';>Student</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Volunteer</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Subject</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>Day</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>From</th><th  style='color:rgb(234,83,63);border: 1px solid black;'>To</th></tr>";
 
 						
 						for (i=0;i<pairs.length;i++){
@@ -57,7 +60,8 @@ document.location.hash = "";
 		 });
 	};
 	function get_stud_data()
-	{
+	{			document.getElementById("gif").style.display = "none";
+
 		$.ajax(
 		{
 			type:"GET",
@@ -68,7 +72,7 @@ document.location.hash = "";
 			{	
 				var chatbox = document.getElementById("stud");
 				chatbox.innerHTML = "";
-				var row = "<h2 class='header'>Names of Students</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);width:50%;border: 1px solid black;';>Name</th><th  style='color:rgb(234,83,63);width:50%;border: 1px solid black;'>Grade</th></tr>";
+				var row = "<h2 class='header'>Names of Students</h2><table style='width:auto;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);width:50%;border: 1px solid black;';>Name</th><th  style='color:rgb(234,83,63);width:50%;border: 1px solid black;'>Grade</th></tr>";
 
 					for (var key in stud_name) 
 					{
@@ -84,7 +88,8 @@ document.location.hash = "";
 		 });
 	 };
 	function get_vol_data()
-	{
+	{			document.getElementById("gif").style.display = "none";
+
 		$.ajax(
 		{
 			type:"GET",
@@ -95,7 +100,7 @@ document.location.hash = "";
 			{	
 				var chatbox = document.getElementById("vol");
 				chatbox.innerHTML = "";
-				var row = "<h2 class='header'>Names of Volunteers</h2><table style='width:100%;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);width:50%;border: 1px solid black;';>Name</th><th  style='color:rgb(234,83,63);width:50%;border: 1px solid black;'>Category</th></tr>";
+				var row = "<h2 class='header'>Names of Volunteers</h2><table style='width:auto;margin-left:25px;border:1 px solid black;'><tr><th style='color:rgb(234,83,63);width:50%;border: 1px solid black;';>Name</th><th  style='color:rgb(234,83,63);width:50%;border: 1px solid black;'>Category</th></tr>";
 
 					for (var key in stud_name) 
 					{
@@ -118,12 +123,12 @@ document.location.hash = "";
 
 	<div class="admin-panel clearfix">
       <div class="slidebar">
-               <div class="logo">
+               <a href="/asignin/"><div class="logo">
             <img class="img-fluid text-center" src="/static/images/vlogo.png" style="margin-left:auto;
     border-radius:50%;
     max-width:70%;">
-          <a href="/home/"></a>
-        </div>
+          
+        </div></a>
         <ul>
           <li><a href="#dashboard" id="targeted"><button onclick="get_dash_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Connected Users</button></a></li>
             <li><a href="#stud"><button onclick="get_stud_data();" style="padding: 0px;margin-left: -15px;width:100%;background: transparent;color: rgb(140,140,140);border: 0px;">Students</button></a></li>
@@ -136,26 +141,28 @@ document.location.hash = "";
       <div class="main">
 
         <div class="mainContent clearfix">
-          <div id="dashboard">
+          <div id="dashboard"  style="width:90%;height: 80%;margin:100px 20px 0 5px;overflow:hidden;overflow-y:auto;overflow-x:auto;" >
+							<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
 
 
 
 
           </div>
-           <div id="stud">
+           <div id="stud"  style="width:90%;height: 80%;margin:100px 20px 0 20px;overflow:hidden;overflow-y:auto;" >
             
                <div class="row"  style="margin-left: 25px;">
-                    
+							<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
+
                </div>
            </div>
 
-            <div id="vol">
+            <div id="vol"  style="width:90%;height: 80%;margin:100px 20px 0 20px;overflow:hidden;overflow-y:auto;" >
              <h2 class="header">Names of Volunteers</h2>
                <div class="row" style="margin-left: 25px;">
-                   <h id="volunteer_row"></h>
+							<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
                </div>
            </div>
-            <div id="add">
+            <div id="add" style="width:90%;height: 80%;margin:100px 20px 0 20px;overflow:hidden;overflow-y:auto;" >
              <h2 class="header">Add Study Material (please enter Youtube Url)</h2>
                <div class="row" style="margin-left: 25px;">
 						<form method="POST" action="/add_study_material/">
@@ -173,18 +180,19 @@ document.location.hash = "";
                </div>
            </div>
 
-           <div id="connected" style="width: 521px">
+           <div id="connected"  style="width:90%;height: 80%;margin:100px 20px 0 20px;overflow:hidden;overflow-x:auto;" >
              <h2 class="header">Connected To...</h2>
-               <div class="container">
+							<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
 
-                   </div>
            </div>
 		
 			
          </div>
      <ul class="statusbar">
-       <li class="logout"><a href="/adlogout/" style="color:blue">Logout</a></li>
+       <li class="logout"><a href="/adlogout/" >Logout</a></li>
      </ul>
+	 	 		<img id="gif" class="img" src="/static/images/9zrk.gif" style="padding-left: 100px;width: 80%;padding-top: 60px;">
+
    </div>
 </div>
 

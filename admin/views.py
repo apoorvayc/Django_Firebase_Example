@@ -33,6 +33,7 @@ def ad_sign_in(request):
     if request.session['uid'] != None:
         currentuserrid = request.session['email']
         print("Email ", currentuserrid)
+        return render(request,"ad_dashboard.html")
     return render(request, "admin_signin.html")
 
 
