@@ -108,6 +108,20 @@ def vpost_signup(request):
 
         database.child("Volunteer_Availability").child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
 
+        vol_email = request.session['email'].split("@")[0].replace(".",",")
+        vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
+        vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
+        vol_fro = get_time_in_minutes(fromvalue)
+        vol_to = get_time_in_minutes(tovalue)
+        for sub in vol_subj_list : 
+            emails = database.child("Day").child(dayvalue).child(vol_category).child(sub).get().val()
+            try :
+                if vol_email not in emails.keys :
+                    database.child("Day").child(dayvalue).child(vol_category).child(sub).update({vol_email:"1"})
+            except :
+                    database.child("Day").child(dayvalue).child(vol_category).child(sub).set({vol_email:"1"})
+            #get students filtered by day,std and subject  
+                
         return render(request, "vinfo.html", {"refresh":"1"})
     return render(request, "vinfo.html", {"refresh":"0"})
     #return render(request, "vdashboard.html", {"n": name})

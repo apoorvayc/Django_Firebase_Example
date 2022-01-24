@@ -136,9 +136,23 @@ def post_signup(request):
         dayvalue = request.POST.get('dayValue')
         fromvalue = request.POST.get('fromtime')
         tovalue = request.POST.get('totime')
-        print(dayvalue)
         database.child('Student_Availability').child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
+        stud_email = request.session['email'].split("@")[0].replace(".",",")
+        stud_grade = database.child("Student_Registration").child(stud_email).get().val()["grade"]
 
+        stud_category = get_student_category(stud_grade)
+        stud_subj_list = database.child("Student_Subject_Preference").child(stud_email).child("subject").get().val()
+        stud_fro = get_time_in_minutes(fromvalue)
+        stud_to = get_time_in_minutes(tovalue)
+
+        for sub in stud_subj_list :
+            emails = database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).get().val()
+            try :
+                if stud_email not in emails.keys :
+                    database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).update({stud_email:"1"})
+            except :
+                    database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).set({stud_email:"1"})
+                            
         return render(request, "sinfo.html", {"refresh":"1"})
     return render(request, "sinfo.html", {"refresh":"0"})
     #return render(request, "sdashboard.html", {"n": name})
@@ -233,6 +247,9 @@ def stud_chat(request,name):
     volunteer_from = name[3]
     volunteer_to = name[4]     
     student_email = request.session["email"].split("@")[0].replace(".",",")
+    student_name = database.child("Student_Registration").child(student_email).get().val()["name"]
+    volunteer_name = database.child("Volunteer_Registration").child(volunteer_email).get().val()["name"]
+    print(student_name,volunteer_name)
     return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunteer_sub,"volunteer_day":volunteer_day,"volunteer_from":volunteer_from,"volunteer_to":volunteer_to})
     
 def messages(request,name) :
