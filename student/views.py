@@ -136,6 +136,7 @@ def post_signup(request):
         dayvalue = request.POST.get('dayValue')
         fromvalue = request.POST.get('fromtime')
         tovalue = request.POST.get('totime')
+        print(dayvalue)
         database.child('Student_Availability').child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
 
         return render(request, "sinfo.html", {"refresh":"1"})
