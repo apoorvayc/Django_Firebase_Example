@@ -147,12 +147,8 @@ def post_signup(request):
 
         for sub in stud_subj_list :
             emails = database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).get().val()
-            try :
-                if stud_email not in emails.keys :
-                    database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).update({stud_email:"1"})
-            except :
-                    database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).set({stud_email:"1"})
-                            
+            database.child("Student_Day").child(dayvalue).child(stud_grade).child(sub).update({stud_email:"1"})
+                           
         return render(request, "sinfo.html", {"refresh":"1"})
     return render(request, "sinfo.html", {"refresh":"0"})
     #return render(request, "sdashboard.html", {"n": name})
@@ -202,6 +198,7 @@ def stud_dash_data(request) :
             for sub in stud_subj_list :
                 emails = database.child("Student_Day").child(day).child(stud_grade).child(sub).get().val()
                 database.child("Student_Day").child(day).child(stud_grade).child(sub).update({stud_email:"1"})
+                
                 #get volunteers filtered by day,std and subject
                 volunteers = get_subject_wise_volunteers(day,stud_category,sub)
                 try :

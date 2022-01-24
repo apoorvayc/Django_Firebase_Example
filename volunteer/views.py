@@ -115,13 +115,8 @@ def vpost_signup(request):
         vol_to = get_time_in_minutes(tovalue)
         for sub in vol_subj_list : 
             emails = database.child("Day").child(dayvalue).child(vol_category).child(sub).get().val()
-            try :
-                if vol_email not in emails.keys :
-                    database.child("Day").child(dayvalue).child(vol_category).child(sub).update({vol_email:"1"})
-            except :
-                    database.child("Day").child(dayvalue).child(vol_category).child(sub).set({vol_email:"1"})
-            #get students filtered by day,std and subject  
-                
+            database.child("Day").child(dayvalue).child(vol_category).child(sub).update({vol_email:"1"})
+               
         return render(request, "vinfo.html", {"refresh":"1"})
     return render(request, "vinfo.html", {"refresh":"0"})
     #return render(request, "vdashboard.html", {"n": name})
