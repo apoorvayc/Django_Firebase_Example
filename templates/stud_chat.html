@@ -20,7 +20,7 @@
 			<div class="row chat-title" style = "height:10%;margin-left:0;margin-right:0;">
 				<div class="col-md-4" style="border: 2px solid white; border-radius: 20%;">
 						<h2>Volunteer: </h2><br>
-						<h2>{{ volunteer_email }}</h2>
+						<h2>{{ volunteer_name }}</h2>
 				</div>
 				<div class="col-md-8 text-center" id="accept_alert">
 					<h2 id="alert_msg">Volunteer has confirmed to teach you, accept if you agree.</h2>
@@ -143,11 +143,11 @@
 						idd = (parseInt(idd)+1).toString();
 						ref_chat_id.set({'id': idd});
 						var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
-						ref.child(idd).set({'{{ student_email }}':document.getElementById("stud_msg").value});
+						ref.child(idd).set({'{{ student_name }}':document.getElementById("stud_msg").value});
 					  } else {
 						ref_chat_id.set({'id':'1'});
 						var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/1/');
-						ref.set({'{{ student_email }}': document.getElementById("stud_msg").value});
+						ref.set({'{{ student_name }}': document.getElementById("stud_msg").value});
 					  }
 					  }
 					  );
@@ -160,7 +160,6 @@
 					 "to": "{{volunteer_to}}"
 					 }
 					 });
-					 document.getElementById("stud_msg").value = "";
 
 
 

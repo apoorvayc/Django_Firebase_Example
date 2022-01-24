@@ -145,7 +145,9 @@ def vol_chat(request,name):
     student_from = name[3]
     student_to = name[4]     
     volunteer_email = request.session['email'].split("@")[0].replace(".",",")
-    return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"student_sub":student_sub,"student_day":student_day,"student_from":student_from,"student_to":student_to})
+    volunteer_name = database.child("Volunteer_Registration").child(volunteer_email).get().val()["name"]
+    student_name = database.child("Student_Registration").child(student_email).get().val()["name"]
+    return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"student_sub":student_sub,"student_day":student_day,"student_from":student_from,"student_to":student_to,"volunteer_name":volunteer_name,"student_name":student_name})
     
 def vdashboard(request) :
     return render(request,"vol_dash.html")

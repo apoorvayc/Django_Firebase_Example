@@ -242,6 +242,7 @@ def stud_dash_data(request) :
 def stud_chat(request,name):
     name = name.split("@")
     volunteer_email = name[0]
+    print(volunteer_email)
     volunteer_sub = name[1]
     volunteer_day = name[2]
     volunteer_from = name[3]
@@ -250,7 +251,7 @@ def stud_chat(request,name):
     student_name = database.child("Student_Registration").child(student_email).get().val()["name"]
     volunteer_name = database.child("Volunteer_Registration").child(volunteer_email).get().val()["name"]
     print(student_name,volunteer_name)
-    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunteer_sub,"volunteer_day":volunteer_day,"volunteer_from":volunteer_from,"volunteer_to":volunteer_to})
+    return render(request,"stud_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"volunteer_sub":volunteer_sub,"volunteer_day":volunteer_day,"volunteer_from":volunteer_from,"volunteer_to":volunteer_to,"student_name":student_name,"volunteer_name":volunteer_name})
     
 def messages(request,name) :
     current_email = name

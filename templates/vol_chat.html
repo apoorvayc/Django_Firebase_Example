@@ -133,11 +133,11 @@
 			idd = (parseInt(idd)+1).toString();
 			ref_chat_id.set({'id': idd});
 			var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/');
-			ref.child(idd).set({'{{ volunteer_email }}':document.getElementById("vol_msg").value});
+			ref.child(idd).set({'{{ volunteer_name }}':document.getElementById("vol_msg").value});
 		  } else {
 			ref_chat_id.set({'id':'1'});
 			var ref = firebase.database().ref('Chat/{{ student_email }}-{{ volunteer_email }}/1/');
-			ref.set({'{{ volunteer_email }}': document.getElementById("vol_msg").value});
+			ref.set({'{{ volunteer_name }}': document.getElementById("vol_msg").value});
 		  }
 		  }
 		  );
@@ -176,7 +176,7 @@
 			<div class="row chat-title" style = "height:12%;margin-left:0;margin-right:0;">
 				<div class="col-md-4" style="border: 2px solid white; border-radius: 20%;">
 						<h2>Student: </h2><br>
-						<h2>{{ student_email }}</h2>
+						<h2>{{ student_name }}</h2>
 				</div>
 				<div class="col-md-8 text-center">
 					<h2 id="alert_msg">If you have confirmed to teach the student, select below button.</h2>
