@@ -182,11 +182,7 @@ def vol_dash_data(request) :
             #subject loop
             for sub in vol_subj_list : 
                 emails = database.child("Day").child(day).child(vol_category).child(sub).get().val()
-                try :
-                    if vol_email not in emails.keys :
-                        database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
-                except :
-                        database.child("Day").child(day).child(vol_category).child(sub).set({vol_email:"1"})
+                database.child("Day").child(day).child(vol_category).child(sub).update({vol_email:"1"})
                 #get students filtered by day,std and subject  
                 students = get_subject_wise_students(day,vol_category,sub)
                 for stud in students :

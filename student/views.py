@@ -201,11 +201,7 @@ def stud_dash_data(request) :
             #subject loop 
             for sub in stud_subj_list :
                 emails = database.child("Student_Day").child(day).child(stud_grade).child(sub).get().val()
-                try :
-                    if stud_email not in emails.keys :
-                        database.child("Student_Day").child(day).child(stud_grade).child(sub).update({stud_email:"1"})
-                except :
-                        database.child("Student_Day").child(day).child(stud_grade).child(sub).set({stud_email:"1"})
+                database.child("Student_Day").child(day).child(stud_grade).child(sub).update({stud_email:"1"})
                 #get volunteers filtered by day,std and subject
                 volunteers = get_subject_wise_volunteers(day,stud_category,sub)
                 try :
