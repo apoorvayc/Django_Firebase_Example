@@ -136,8 +136,7 @@ def post_signup(request):
         dayvalue = request.POST.get('dayValue')
         fromvalue = request.POST.get('fromtime')
         tovalue = request.POST.get('totime')
-        if dayvalue and fromvalue and tovalue :
-            database.child('Student_Availability').child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
+        database.child('Student_Availability').child(sname).child(dayvalue).push({"from": fromvalue, "to": tovalue})
 
         return render(request, "sinfo.html", {"refresh":"1"})
     return render(request, "sinfo.html", {"refresh":"0"})
