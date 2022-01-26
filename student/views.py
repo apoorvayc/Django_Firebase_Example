@@ -31,7 +31,9 @@ def sign_in(request):
     if request.session['uid'] != None:
         currentuserrid = request.session['email']
         print("Email ", currentuserrid)
-        return render(request,"stud_dash.html")
+        email = request.session['email']
+        sname = database.child("Student_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+        return render(request,"stud_dash.html",{"name":sname})
     return render(request, "signIn.html")
 
 def post_signin(request):
@@ -51,7 +53,8 @@ def post_signin(request):
             session_id = user['idToken']
             request.session['uid'] = session_id
             request.session['email'] = email
-            return render(request,"stud_dash.html")
+            sname = database.child("Student_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+            return render(request,"stud_dash.html",{"name":sname})
 
 
         except:
@@ -59,7 +62,10 @@ def post_signin(request):
             return render(request, "signIn.html", {"msg": message})
 
     else:
-        return render(request,"stud_dash.html")
+        email = request.session['email']
+        sname = database.child("Student_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+        return render(request,"stud_dash.html",{"name":sname})
+
 
 
 def sdashboard(request) :
@@ -78,16 +84,19 @@ def sdashboard(request) :
             user = authe.sign_in_with_email_and_password(email, password)
             session_id = user['idToken']
             request.session['uid'] = session_id
-            request.session['email'] = email
-            return render(request,"stud_dash.html")
+            email = request.session['email']
+            sname = database.child("Student_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+            return render(request,"stud_dash.html",{"name":sname})
 
         except:
             message = "Please check your emailID / Password"
             return render(request, "signIn.html", {"msg": message})
 
     else:
-        return render(request,"stud_dash.html")
-
+        email = request.session['email']
+        sname = database.child("Student_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+        return render(request,"stud_dash.html",{"name":sname})
+        
     
 
   
@@ -181,7 +190,7 @@ def stud_dash_data(request) :
     stud_email = request.session['email'].split("@")[0].replace(".",",")
     print(stud_email)
     stud_grade = database.child("Student_Registration").child(stud_email).get().val()["grade"]
-
+    sname = database.child("Student_Registration").child(stud_email).get().val()["name"]
     stud_category = get_student_category(stud_grade)
     stud_subj_list = database.child("Student_Subject_Preference").child(stud_email).child("subject").get().val()
     stud_avail_data = database.child("Student_Availability").child(stud_email).get().val()
@@ -224,12 +233,13 @@ def stud_dash_data(request) :
                         end_hr = str(end//60).zfill(2)
                         end_min = str(end%60).zfill(2)
                         
-                        match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min) + "@" + stud_email
+                        match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min) + "@" + sname
                         
                         match_list.append(match_str.split("@"))
                 except :
                     continue
-    
+    if match_list :
+        match_list = sorted(match_list,key = lambda x : x[0])
     return HttpResponse(json.dumps(match_list), content_type='application/json')
 
 def stud_chat(request,name):
@@ -351,7 +361,7 @@ def accept_stud_vol(request):
             times = database.child("Student_Availability").child(student_email).child(volunteer_day).get().val()
             if times is None :
                 student_grade = database.child("Student_Registration").child(student_email).get().val()["grade"]
-                database.child("Student_Day").child(volunteer_day).child(student_grade).child(volunteer_sub).update({student_email:"1"})
+                database.child("Student_Day").child(volunteer_day).child(student_grade).child(volunteer_sub).child(student_email).remove()
 
                     
                 

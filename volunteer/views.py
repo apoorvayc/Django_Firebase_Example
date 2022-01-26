@@ -31,7 +31,10 @@ def vsign_in(request):
     if request.session['uid'] != None:
         currentuserrid = request.session['email']
         print("Email ", currentuserrid)
-        return render(request,"vol_dash.html")
+        email = request.session['email']
+        sname = database.child("Volunteer_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+        return render(request,"vol_dash.html",{"name":sname})
+
     return render(request, "vsignin.html")
 
 def vpost_signin(request):
@@ -52,14 +55,17 @@ def vpost_signin(request):
             session_id = user['idToken']
             request.session['uid'] = session_id
             request.session['email'] = email
-            return render(request,"vol_dash.html")
+            sname = database.child("Volunteer_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+            return render(request,"vol_dash.html",{"name":sname})
 
         except:
             message = "Invalid Credentials!!"
             return render(request, "vsignin.html", {"msg": message})
 
     else:
-        return render(request,"vol_dash.html")
+        email = request.session['email']
+        sname = database.child("Volunteer_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+        return render(request,"vol_dash.html",{"name":sname})
 
 
 def vsign_up(request):
@@ -145,7 +151,35 @@ def vol_chat(request,name):
     return render(request,"vol_chat.html",{"student_email":student_email,"volunteer_email":volunteer_email,"student_sub":student_sub,"student_day":student_day,"student_from":student_from,"student_to":student_to,"volunteer_name":volunteer_name,"student_name":student_name})
     
 def vdashboard(request) :
-    return render(request,"vol_dash.html")
+    for key, value in request.POST.items():
+        print('{} => {}'.format(key, value))
+    if "uid" not in request.session.keys():
+        request.session['uid'] = None
+    if request.session['uid'] == None:
+        if request.POST.get('email') == None or request.POST.get("password") == None:
+            # return redirect('http://127.0.0.1:8000/')
+            return HttpResponse("you are not signed in")
+        request.session['email'] = request.POST.get('email')
+        email = request.POST.get('email')
+        ename = email.split("@")[0].replace(".",",")
+        password = request.POST.get('password')
+        try:
+            user = authe.sign_in_with_email_and_password(email, password)
+            session_id = user['idToken']
+            request.session['uid'] = session_id
+            request.session['email'] = email
+            sname = database.child("Volunteer_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+            return render(request,"vol_dash.html",{"name":sname})
+
+        except:
+            message = "Invalid Credentials!!"
+            return render(request, "vsignin.html", {"msg": message})
+
+    else:
+        email = request.session['email']
+        sname = database.child("Volunteer_Registration").child(email.split("@")[0].replace(".",",")).get().val()["name"]
+        return render(request,"vol_dash.html",{"name":sname})
+
     
 def get_subject_wise_students(day,vol_category,subject) :
     student_obj = []
@@ -163,12 +197,14 @@ def get_time_in_minutes(time) :
 def vol_dash_data(request) :
     match_list = []
     vol_email = request.session['email'].split("@")[0].replace(".",",")
+    vname = database.child("Volunteer_Registration").child(vol_email).get().val()["name"]
     vol_category = database.child("Volunteer_Registration").child(vol_email).get().val()["grade"]
     vol_subj_list = database.child("Volunteer_Subject_Preference").child(vol_email).child("subject").get().val()
     vol_avail_data = database.child("Volunteer_Availability").child(vol_email).get().val()
     #day loop   
     for i in vol_avail_data :
         day = i
+        print(day)
         for j in vol_avail_data[i] : 
             time_from = vol_avail_data[i][j]["from"]
             vol_fro = get_time_in_minutes(time_from)
@@ -202,13 +238,15 @@ def vol_dash_data(request) :
                                 end_hr = str(end//60).zfill(2)
                                 end_min = str(end%60).zfill(2)
 
-                                match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min) + "@" + vol_email
+                                match_str = t[2] + "@" + sub + "@" + day + "@" + str(start_hr)+":"+str(start_min) + "@" + str(end_hr)+":"+str(end_min) + "@" + vname
                                 
                                 match_list.append(match_str.split("@"))
                                 #match_list.append(check_for_overlaps(overlap,stud_fro,stud_to,stud_email,subject,day))
                         except :
                             continue
    
+    if match_list :
+        match_list = sorted(match_list,key = lambda x : x[0])
     return HttpResponse(json.dumps(match_list), content_type='application/json')
  
 def messages(request,name) :

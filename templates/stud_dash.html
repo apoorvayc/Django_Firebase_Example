@@ -19,6 +19,7 @@ document.location.hash = "";
 
 }
 
+
 	function stud_dash_data()
 	{
 			document.getElementById("gif").style.display = "none";
@@ -195,7 +196,7 @@ document.location.hash = "";
           <div id="dashboard" style="width:90%;height: 80%; margin:100px 20px 0 20px; overflow:hidden;overflow-y:auto;">
 
 
-            <h2 class="header text-center"><span class="icon"></span>Welcome {{ email }}! Connect with the volunteers to start a chat. <br>Keep Learning! </h2>
+            <h2 class="header text-center"><span class="icon"></span>Welcome {{ name }}! Connect with the volunteers to start a chat. <br>Keep Learning! </h2>
 			<img id="" class="img text-center" src="/static/images/loading.gif" style="padding-left: 250px;width: 60%;padding-top: 100px;">
           </div>
            <div id="msg"style="width:90%;height: 80%; margin:100px 20px 0 20px; overflow:hidden;overflow-y:auto;">
@@ -217,6 +218,8 @@ document.location.hash = "";
      <ul class="statusbar">
 		<li class="logout"><a href="/logout/" >Logout</a></li>
 		<li class="logout"><a href="/sinfo/" style="width:120%;">Add Availability</a></li>
+				<l1 ><h2 class="header text-center"><i style="color:#ff6347;">Welcome {{ name }}! </i></h2></li>
+
      </ul>
 	 		<img id="gif" class="img" src="/static/images/9zrk.gif" style="padding-left: 100px;width: 80%;padding-top: 60px;">
 
