@@ -89,7 +89,7 @@ def vinfo(request):
         request.session["email"] = email
         session_id = user['idToken']
         request.session['uid'] = session_id
-        database.child("Volunteer_Registration").child(sname).set({"name": name, "grade": grade})
+        database.child("Volunteer_Registration").child(sname).set({"name": name, "grade": grade, "email":email})
         database.child("Volunteer_Subject_Preference").child(sname).set({"subject": subject})
 
     return render(request, "vinfo.html",{"refresh":"0"})
@@ -303,12 +303,12 @@ def confirm_stud_vol(request) :
         "volunteer_email":volunteer_email
     }
     html_body = render_to_string("temp.html", merge_data)
-
+    email = database.child("Student_Registration").child(student_email).get().val()["email"]
     message = EmailMultiAlternatives(
        subject=mail_subj,
        body="",
        from_email="rutuom.12@gmail.com", 
-       to=[student_email]
+       to=[email]
     )
     message.attach_alternative(html_body, "text/html")
     message.send(fail_silently=False)

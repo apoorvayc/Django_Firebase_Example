@@ -40,8 +40,8 @@ document.location.hash = "";
 				row = "<h2 class='header text-center'><span class='icon'></span>Welcome " + stud_dash_data[0][5] + "! Connect with the volunteers to start a chat. <br>Keep Learning! </h2><div class='row'>";
 				for(i=0;i<stud_dash_data.length;i++){
 					console.log(stud_dash_data[i][0]);
-					row += "<div class='col-md-4'><h style='color:#FF0000;'>Volunteer: </h><h>" +  stud_dash_data[i][0] + "</h><br><h  style='color:#FF0000;'>Subject: </h><h>" + stud_dash_data[i][1] + "</h><br><h  style='color:#FF0000;'>Day: </h><h>" + stud_dash_data[i][2] + "</h><br><h  style='color:#FF0000;'>From: </h><h>" + stud_dash_data[i][3] + "</h><br><h style='color:#FF0000;'>To: </h><h>" + stud_dash_data[i][4] + "</h><br><a href = '/stud_chat/"+stud_dash_data[i][0]+"@"+stud_dash_data[i][1]+"@"+stud_dash_data[i][2]+"@"+stud_dash_data[i][3]+"@"+stud_dash_data[i][4]+"'><input type='button' value='Connect Volunteer'></a>";
-					row += "</div>";
+					row += "<div class='col-md-4'><div class='col-md-12' style='background:#ffcccb; margin: 10px 0 10px 0'><h style='color:#FF0000;'>Volunteer: </h><h>" +  stud_dash_data[i][0] + "</h><br><h  style='color:#FF0000;'>Subject: </h><h>" + stud_dash_data[i][1] + "</h><br><h  style='color:#FF0000;'>Day: </h><h>" + stud_dash_data[i][2] + "</h><br><h  style='color:#FF0000;'>From: </h><h>" + stud_dash_data[i][3] + "</h><br><h style='color:#FF0000;'>To: </h><h>" + stud_dash_data[i][4] + "</h><br><a href = '/stud_chat/"+stud_dash_data[i][0]+"@"+stud_dash_data[i][1]+"@"+stud_dash_data[i][2]+"@"+stud_dash_data[i][3]+"@"+stud_dash_data[i][4]+"'><input type='button' style='margin-bottom:5px;' value='Connect Volunteer'></a>";
+					row += "</div></div>";
 				}
 				row += "</div>";
 				document.getElementById("dashboard").innerHTML = row; 
@@ -107,8 +107,8 @@ document.location.hash = "";
 				var row = "<h2 class='header ' style=''>Received Messages</h2><div class='row'>";
 				for(i=0;i<received_messages_by_stud.length;i++){
 					console.log(received_messages_by_stud[i]);
-					row += "<div class='col-md-4'><h>Volunteer: " +  received_messages_by_stud[i][0] + "</h><br><h>Subject: " + received_messages_by_stud[i][1] + "</h><br><h>Day: " + received_messages_by_stud[i][2] + "</h><br><h>From: " + received_messages_by_stud[i][3] + "</h><br><h>To: " + received_messages_by_stud[i][4] + "</h><br><h>Message: " + received_messages_by_stud[i][5] + "</h><br><a href = '/stud_chat/"+received_messages_by_stud[i][0]+"@"+received_messages_by_stud[i][1]+"@"+received_messages_by_stud[i][2]+"@"+received_messages_by_stud[i][3]+"@"+received_messages_by_stud[i][4]+"'><input type='button' value='Connect Volunteer'></a>";
-					row += "</div>";
+					row += "<div class='col-md-4'><div class='col-md-12' style='background:#ffcccb; margin: 10px 0 10px 0'><h>Volunteer: " +  received_messages_by_stud[i][0] + "</h><br><h>Subject: " + received_messages_by_stud[i][1] + "</h><br><h>Day: " + received_messages_by_stud[i][2] + "</h><br><h>From: " + received_messages_by_stud[i][3] + "</h><br><h>To: " + received_messages_by_stud[i][4] + "</h><br><h>Message: " + received_messages_by_stud[i][5] + "</h><br><a href = '/stud_chat/"+received_messages_by_stud[i][0]+"@"+received_messages_by_stud[i][1]+"@"+received_messages_by_stud[i][2]+"@"+received_messages_by_stud[i][3]+"@"+received_messages_by_stud[i][4]+"'><input type='button'  style='margin-bottom:5px;'  value='Connect Volunteer'></a>";
+					row += "</div></div>";
 				}
 				row += "</div>";
 				document.getElementById("msg").innerHTML = row;
@@ -128,7 +128,7 @@ document.location.hash = "";
 			},
 			success: function( study_material )
 			{	
-			if (study_material.length == 0){
+			if (study_material == null){
 				console.log("here 2");
 				document.getElementById("study").innerHTML  = "<h2>No study materials uploaded yet.</h2>"
 				}
@@ -148,7 +148,7 @@ document.location.hash = "";
 							for(i=1;i<study_material[key][k].length;i++) 
 							{
 								console.log(study_material[key][k][i])
-								row += "<div class='col-md-4'><iframe width='200' height='120' src='" + study_material[key][k][i] + "' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></div>";
+								row += "<div class='col-md-4'><div class='col-md-12' style='background:#ffcccb; margin: 10px 0 10px 0;'><iframe width='200' height='120' src='" + study_material[key][k][i] + "' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></div></div>";
 						   }
 						   
 						
@@ -164,6 +164,11 @@ document.location.hash = "";
 		 });
 	 };
 </script>
+<style>
+.btn-primary, .btn-info {
+	background-color: #ff6347!important;
+	}
+</style>
 	<div class = "container">
 
 

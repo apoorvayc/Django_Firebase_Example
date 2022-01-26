@@ -32,8 +32,8 @@
 				row = "<h2 class='header text-center'><span class='icon'></span>Welcome " + vol_dash_data[0][5] + "! Connect with the students to start a chat. <br>Keep Mentoring! </h2><div class='row'>";
 				for(i=0;i<vol_dash_data.length;i++){
 					console.log(vol_dash_data[i][0]);
-					row += "<div class='col-md-4' style='margin-bottom:20px;'><h style='color:#FF0000;'>Student: </h><h>" +  vol_dash_data[i][0] + "</h><br><h style='color:#FF0000;'>Subject: </h><h>" + vol_dash_data[i][1] + "</h><br><h style='color:#FF0000;'>Day: </h><h>" + vol_dash_data[i][2] + "</h><br><h style='color:#FF0000;'>From: </h><h>" + vol_dash_data[i][3] + "</h><br><h style='color:#FF0000;'>To: </h><h>" + vol_dash_data[i][4] + "</h><br><a href = '/vol_chat/"+vol_dash_data[i][0]+"@"+vol_dash_data[i][1]+"@"+vol_dash_data[i][2]+"@"+vol_dash_data[i][3]+"@"+vol_dash_data[i][4]+"'><input type='button' value='Connect Student'></a>";
-					row += "</div>";
+					row += "<div class='col-md-4' style='margin-bottom:20px;'><div class='col-md-12' style='background:#ffcccb; margin: 10px 0 10px 0'><h style='color:#FF0000;'>Student: </h><h>" +  vol_dash_data[i][0] + "</h><br><h style='color:#FF0000;'>Subject: </h><h>" + vol_dash_data[i][1] + "</h><br><h style='color:#FF0000;'>Day: </h><h>" + vol_dash_data[i][2] + "</h><br><h style='color:#FF0000;'>From: </h><h>" + vol_dash_data[i][3] + "</h><br><h style='color:#FF0000;'>To: </h><h>" + vol_dash_data[i][4] + "</h><br><a href = '/vol_chat/"+vol_dash_data[i][0]+"@"+vol_dash_data[i][1]+"@"+vol_dash_data[i][2]+"@"+vol_dash_data[i][3]+"@"+vol_dash_data[i][4]+"'><input type='button' style='margin-bottom:5px;' value='Connect Student'></a>";
+					row += "</div></div>";
 				}
 				row += "</div>";
 				document.getElementById("dashboard").innerHTML = row;
@@ -98,8 +98,8 @@
 				row = "<div class='row'>";
 				for(i=0;i<received_messages_by_vol.length;i++){
 					console.log(received_messages_by_vol[i]);
-					row += "<div class='col-md-4'><h>Student: " +  received_messages_by_vol[i][0] + "</h><br><h>Subject: " + received_messages_by_vol[i][1] + "</h><br><h>Day: " + received_messages_by_vol[i][2] + "</h><br><h>From: " + received_messages_by_vol[i][3] + "</h><br><h>To: " + received_messages_by_vol[i][4] + "</h><br><h>Message: " + received_messages_by_vol[i][5] + "</h><br><a href = '/vol_chat/"+received_messages_by_vol[0][0]+"@"+received_messages_by_vol[0][1]+"@"+received_messages_by_vol[0][2]+"@"+received_messages_by_vol[0][3]+"@"+received_messages_by_vol[0][4]+"'><input type='button' value='Connect Student'></a>";
-					row += "</div>";
+					row += "<div class='col-md-4'><div class='col-md-12' style='background:#ffcccb; margin: 10px 0 10px 0'><h>Student: " +  received_messages_by_vol[i][0] + "</h><br><h>Subject: " + received_messages_by_vol[i][1] + "</h><br><h>Day: " + received_messages_by_vol[i][2] + "</h><br><h>From: " + received_messages_by_vol[i][3] + "</h><br><h>To: " + received_messages_by_vol[i][4] + "</h><br><h>Message: " + received_messages_by_vol[i][5] + "</h><br><a href = '/vol_chat/"+received_messages_by_vol[0][0]+"@"+received_messages_by_vol[0][1]+"@"+received_messages_by_vol[0][2]+"@"+received_messages_by_vol[0][3]+"@"+received_messages_by_vol[0][4]+"'><input type='button' style='margin-bottom:5px;' value='Connect Student'></a>";
+					row += "</div></div>";
 				}
 				row += "</div>";
 				document.getElementById("msg").innerHTML = row;

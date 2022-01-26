@@ -16,14 +16,20 @@
 </head>
 
 <body>
-<div class="container"><style>@media (min-width: 1400px){
+<div class="container">
+<style>@media (min-width: 1400px){
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
     max-width: 500px;}}
     @media (min-width: 1200px){
     .container, .container-lg, .container-md, .container-sm, .container-xl {
         max-width: 400px;
     }
-    }</style>
+    }
+.btn-primary, .btn-info {
+	background-color: #ff6347!important;
+	}
+	
+	</style>
     <main class="form-signin">
         <form method="post" action="/vinfo/">
             {% csrf_token %}
@@ -31,17 +37,17 @@
             <h1 class="h3 mb-3 fw-normal">Volunteer Sign Up</h1>
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name">
+                <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name" required> 
 
             </div>
 
             <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email">
+                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="Email" required>
 
             </div>
             <div class="form-floating">
                 <input type="password" class="form-control" id="floatingPassword" name="password"
-                       placeholder="Password">
+                       placeholder="Password" required>
 
             </div>
             <section>

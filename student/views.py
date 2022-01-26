@@ -119,7 +119,7 @@ def sinfo(request):
         request.session["email"] = email
         session_id = user['idToken']
         request.session['uid'] = session_id
-        database.child('Student_Registration').child(sname).set({"name": name, "grade": grade})
+        database.child('Student_Registration').child(sname).set({"name": name, "grade": grade, "email": email})
         database.child("Student_Subject_Preference").child(sname).set({"subject": subject})
 
     return render(request, "sinfo.html", {"refresh": "0"})
@@ -320,16 +320,10 @@ def accept_stud_vol(request):
                         {"from": volunteer_to, "to": time[t]["to"]})
 
             times = database.child("Volunteer_Availability").child(volunteer_email).child(volunteer_day).get().val()
-            try:
-                if volunteer_email not in times.keys:
-                    vol_category = database.child("Volunteer_Registration").child(volunteer_email).get().val()["grade"]
-                    try:
-                        database.child("Day").child(volunteer_day).child(vol_category).child(volunteer_sub).child(
-                            volunteer_email).remove()
-                    except:
-                        pass
-            except:
-                pass
+            print(times)
+            if times is None :
+                vol_category = database.child("Volunteer_Registration").child(volunteer_email).get().val()["grade"]
+                database.child("Day").child(volunteer_day).child(vol_category).child(volunteer_sub).child(volunteer_email).remove()
 
     # update student preferences
     time = database.child("Student_Availability").child(student_email).child(volunteer_day).get().val()
@@ -355,16 +349,12 @@ def accept_stud_vol(request):
                         {"from": volunteer_to, "to": time[t]["to"]})
 
             times = database.child("Student_Availability").child(student_email).child(volunteer_day).get().val()
-            try:
-                if student_email not in times.keys:
-                    stud_grade = database.child("Student_Registration").child(student_email).get().val()["grade"]
-                    try:
-                        database.child("Student_Day").child(volunteer_day).child(stud_grade).child(volunteer_sub).child(
-                            student_email).remove()
-                    except:
-                        pass
-            except:
-                pass
+            if times is None :
+                student_grade = database.child("Student_Registration").child(student_email).get().val()["grade"]
+                database.child("Student_Day").child(volunteer_day).child(student_grade).child(volunteer_sub).update({student_email:"1"})
+
+                    
+                
     database.child("Connected_stud_vol").child(
         student_email + "-" + volunteer_email + "-" + volunteer_sub + "-" + volunteer_day + "-" + volunteer_from + "-" + volunteer_to).set(
         {"status": "connected"})
@@ -378,12 +368,12 @@ def accept_stud_vol(request):
         "student_email": student_email
     }
     html_body = render_to_string("approve_mail.html", merge_data)
-
+    email = database.child("Volunteer_Registration").child(volunteer_email).get().val()["email"]
     message = EmailMultiAlternatives(
         subject=mail_subj,
         body="",
         from_email="rutuom.12@gmail.com",
-        to=[volunteer_email]
+        to=[email]
     )
     message.attach_alternative(html_body, "text/html")
     message.send(fail_silently=False)
